@@ -20,7 +20,10 @@ namespace ChatApp.DataStores
             var doc = LoadDocument();
             doc.Root.Add(elem);
 
-            doc.Save(_documentPath);
+            using (var writer = new StreamWriter(_documentPath))
+            {
+                doc.Save(writer);
+            }
         }
 
         public XDocument LoadDocument()

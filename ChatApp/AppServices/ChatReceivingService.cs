@@ -18,6 +18,8 @@ namespace ChatApp.AppServices
         private ChatEntryRepository _repository;
         private HashSet<ChatEntry> localEntries;
 
+        public IEnumerable<ChatEntry> ReceivedMessages { get { return localEntries; } }
+
         public ChatReceivingService(ChatEntryRepository repository)
         {
             _repository = repository;

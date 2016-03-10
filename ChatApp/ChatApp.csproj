@@ -72,6 +72,7 @@
     </ApplicationDefinition>
     <Compile Include="AppServices\ChatReceivingService.cs" />
     <Compile Include="DataStores\XDocumentRepository.cs" />
+    <Compile Include="Helpers\FlashWindowHelper.cs" />
     <Compile Include="Models\ChatEntry.cs" />
     <Compile Include="Models\ChatEntryId.cs" />
     <Compile Include="Models\User.cs" />
