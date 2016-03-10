@@ -1,10 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ChatApp.Models
 {
+    public class ChatEntryEqualsComparer : IEqualityComparer<ChatEntry>
+    {
+
+        public bool Equals(ChatEntry x, ChatEntry y)
+        {
+            return x.Equals(y);
+        }
+
+        public int GetHashCode(ChatEntry obj)
+        {
+            return obj.GetHashCode();
+        }
+    }
+
     public class ChatEntry
     {
         public ChatEntryId Id { get; set; }
@@ -22,6 +34,17 @@ namespace ChatApp.Models
             SendAt = sendAt;
             Sender = sender;
             Content = content;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ChatEntry)) return false;
+            return Id.Equals(((ChatEntry)obj).Id);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
     }
 }

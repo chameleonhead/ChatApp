@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ChatApp.DataStores;
+﻿using ChatApp.DataStores;
 using ChatApp.Models;
+
+using System;
 
 namespace ChatApp.AppServices
 {
-    class ChatEntryService
+    class ChatSendingService
     {
         private ChatEntryRepository _Repository;
 
-        public ChatEntryService(ChatEntryRepository repository)
+        public ChatSendingService(ChatEntryRepository repository)
         {
             _Repository = repository;
         }

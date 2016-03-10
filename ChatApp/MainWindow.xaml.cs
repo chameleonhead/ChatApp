@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using ChatApp.ViewModels;
-using System.Xml.Linq;
+﻿using ChatApp.AppServices;
 using ChatApp.DataStores;
-using ChatApp.AppServices;
-using System.IO;
+using ChatApp.ViewModels;
+
+using System;
+using System.Windows;
 
 namespace ChatApp
 {
@@ -29,10 +17,11 @@ namespace ChatApp
             InitializeComponent();
 
             var repository = new ChatEntryRepository(Properties.Settings.Default.ChatHistoryFilePath);
-            var service = new ChatEntryService(repository);
+            var sendingService = new ChatSendingService(repository);
+            var receivingService = new ChatReceivingService(repository);
 
-            var chvm = new ChatHistoryViewModel(repository, Properties.Settings.Default.ReloadTimeInMillis);
-            var tsvm = new TextSenderViewModel(service, Properties.Settings.Default.UserName, Properties.Settings.Default.EmailAddress);
+            var chvm = new ChatHistoryViewModel(receivingService);
+            var tsvm = new TextSenderViewModel(sendingService);
             ChatHistory.ItemsSource = chvm.Entries;
             ChatSendPanel.DataContext = tsvm;
         }

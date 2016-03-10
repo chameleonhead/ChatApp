@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using System.IO;
 
 namespace ChatApp.DataStores
 {
-    public delegate void EntrySavedHandler<T>(object sender, T entry);
-
     class XDocumentRepository<T>
     {
         private string _documentPath;
-
-        public EntrySavedHandler<T> EntrySaved;
 
         public XDocumentRepository(string documentPath)
         {
@@ -28,9 +21,6 @@ namespace ChatApp.DataStores
             doc.Root.Add(elem);
 
             doc.Save(_documentPath);
-
-            if (EntrySaved != null)
-                EntrySaved(this, entry);
         }
 
         public XDocument LoadDocument()

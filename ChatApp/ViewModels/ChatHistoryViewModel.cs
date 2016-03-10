@@ -1,54 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using ChatApp.AppServices;
 using ChatApp.Models;
+
 using System.Collections.ObjectModel;
-using System.Timers;
-using ChatApp.DataStores;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Windows;
 
 namespace ChatApp.ViewModels
 {
     class ChatHistoryViewModel : AbstractViewModel
     {
-        private ChatEntryRepository _repository;
+        private ChatReceivingService _service;
+
         public ObservableCollection<ChatEntry> Entries { get; private set; }
 
-        public ChatHistoryViewModel(ChatEntryRepository repo, double reloatTimeInMillis)
+        public ChatHistoryViewModel(ChatReceivingService service)
         {
             Entries = new ObservableCollection<ChatEntry>();
-            _repository = repo;
-
-            _repository.EntrySaved += (s, e) =>
-            {
-                ReloadAllEntries();
-            };
-
-            System.Timers.Timer t = new System.Timers.Timer(reloatTimeInMillis);
-            t.Elapsed += new ElapsedEventHandler(t_Elapsed);
-            t.Enabled = true;
-
-            ReloadAllEntries();
+            _service = service;
+            _service.ChatMessageReceived += ChatMessageReceived;
         }
 
-        void t_Elapsed(object sender, EventArgs e)
+        ~ChatHistoryViewModel()
         {
-            ReloadAllEntries();
+            _service.ChatMessageReceived -= ChatMessageReceived;
         }
 
-        public void ReloadAllEntries()
+        void ChatMessageReceived(object sender, ChatEntry entry)
         {
-            Application.Current.Dispatcher.Invoke(new Action(() => 
-                {
-                    Entries.Clear();
-                    _repository.FindAll()
-                        .OrderByDescending(e => e.SendAt)
-                        .ToList()
-                        .ForEach((e) => Entries.Add(e));
-                }));
+            Entries.Add(entry);
+            Entries.Move(Entries.IndexOf(entry), 0);
         }
     }
 }

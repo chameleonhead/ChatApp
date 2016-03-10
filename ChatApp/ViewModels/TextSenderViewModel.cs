@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Input;
+﻿using ChatApp.AppServices;
 using ChatApp.ViewModels.Commands;
-using ChatApp.AppServices;
+
+using System;
 
 namespace ChatApp.ViewModels
 {
@@ -24,8 +21,14 @@ namespace ChatApp.ViewModels
 
         public ChatSendCommand SendCommand { get; set; }
 
-        public TextSenderViewModel(ChatEntryService service, string userName, string emailAddress)
+        public TextSenderViewModel(ChatSendingService service)
         {
+            string userName;
+            string emailAddress;
+            
+            userName = Properties.Settings.Default.UserName;
+            emailAddress = Properties.Settings.Default.EmailAddress;
+
             SendCommand = new ChatSendCommand(service) { Name = userName, EmailAddress = emailAddress };
             SendCommand.Executed += new EventHandler(SendCommand_Executed);
         }

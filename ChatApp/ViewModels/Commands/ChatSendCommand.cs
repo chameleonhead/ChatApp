@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ChatApp.AppServices;
+﻿using ChatApp.AppServices;
 using ChatApp.Models;
-using ChatApp.DataStores;
-using System.Xml.Linq;
+
+using System;
 
 namespace ChatApp.ViewModels.Commands
 {
     class ChatSendCommand : AbstractCommand
     {
-        private ChatEntryService _Service;
+        private ChatSendingService _Service;
         private string _Content;
 
         public string Name { get; set; }
@@ -21,7 +17,7 @@ namespace ChatApp.ViewModels.Commands
             set { _Content = value; RaiseCanExecuteChanged(new EventArgs()); }
         }
 
-        public ChatSendCommand(ChatEntryService service)
+        public ChatSendCommand(ChatSendingService service)
         {
             _Service = service;
         }
