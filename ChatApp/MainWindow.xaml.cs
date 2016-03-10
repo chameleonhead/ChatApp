@@ -4,6 +4,7 @@ using ChatApp.ViewModels;
 
 using System;
 using System.Windows;
+using System.Windows.Input;
 
 namespace ChatApp
 {
@@ -12,6 +13,9 @@ namespace ChatApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private TextSenderViewModel _TextSenderViewModel;
+        private ChatHistoryViewModel _ChatHistoryViewModel;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -20,16 +24,16 @@ namespace ChatApp
             var sendingService = new ChatSendingService(repository);
             var receivingService = new ChatReceivingService(repository);
 
-            var chvm = new ChatHistoryViewModel(receivingService);
-            var tsvm = new TextSenderViewModel(sendingService);
-            ChatHistory.ItemsSource = chvm.Entries;
-            ChatSendPanel.DataContext = tsvm;
+            _ChatHistoryViewModel = new ChatHistoryViewModel(receivingService);
+            _TextSenderViewModel = new TextSenderViewModel(sendingService);
+            ChatHistory.ItemsSource = _ChatHistoryViewModel.Entries;
+            ChatSendPanel.DataContext = _TextSenderViewModel;
         }
 
-        protected override void OnClosed(EventArgs e)
+        private void TextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            base.OnClosed(e);
-            Properties.Settings.Default.Save();
+            if (e.Key == Key.Enter && _TextSenderViewModel.SendCommand.CanExecute(null))
+                _TextSenderViewModel.SendCommand.Execute(null);
         }
     }
 }

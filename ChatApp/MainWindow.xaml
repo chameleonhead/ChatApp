@@ -12,7 +12,7 @@
         <ListView Grid.Row="0" Name="ChatHistory" HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid HorizontalAlignment="Stretch" Margin="10">
+                    <Grid HorizontalAlignment="Stretch" Margin="8">
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
@@ -22,9 +22,9 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Content}" TextWrapping="WrapWithOverflow" />
-                        <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Text="{Binding Path=Sender.Name}" Padding="0 10"/>
-                        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding SendAt}" Padding="0 10"/>
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Content}" TextWrapping="Wrap" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Foreground="Gray" Text="{Binding Path=Sender.Name}" Padding="0 3"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Foreground="Gray" Text="{Binding SendAt}" Padding="0 3"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -32,7 +32,7 @@
         <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsTabStop="False" />
         <DockPanel Grid.Row="2" Name="ChatSendPanel">
             <Button DockPanel.Dock="Right" Padding="20, 10" Content="送信" Command="{Binding SendCommand}" />
-            <TextBox DockPanel.Dock="Left" Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox DockPanel.Dock="Left" Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" KeyDown="TextBox_KeyDown" />
         </DockPanel>
     </Grid>
 </Window>
