@@ -31,8 +31,7 @@ namespace ChatApp.ViewModels
 
         void ChatMessageReceived(object sender, ChatEntry entry)
         {
-            Entries.Add(entry);
-            Entries.Move(Entries.IndexOf(entry), 0);
+            Entries.Insert(0, entry);
 
             // Windowを点滅させる
             var helper = new FlashWindowHelper(Application.Current);
