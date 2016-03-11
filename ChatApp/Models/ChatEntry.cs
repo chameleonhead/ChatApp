@@ -3,23 +3,10 @@ using System.Collections.Generic;
 
 namespace ChatApp.Models
 {
-    public class ChatEntryEqualsComparer : IEqualityComparer<ChatEntry>
-    {
-
-        public bool Equals(ChatEntry x, ChatEntry y)
-        {
-            return x.Equals(y);
-        }
-
-        public int GetHashCode(ChatEntry obj)
-        {
-            return obj.GetHashCode();
-        }
-    }
-
     public class ChatEntry
     {
         public ChatEntryId Id { get; set; }
+        public ChatTopic Topic { get; set; }
         public DateTime SendAt { get; set; }
         public User Sender { get; set; }
         public string Content { get; set; }
@@ -28,12 +15,17 @@ namespace ChatApp.Models
         {
         }
 
-        public ChatEntry(ChatEntryId id, DateTime sendAt, User sender, string content)
+        public ChatEntry(ChatEntryId id, DateTime sendAt, User sender, string content) : this(id, sendAt, sender, content, null)
+        {
+        }
+
+        public ChatEntry(ChatEntryId id, DateTime sendAt, User sender, string content, ChatTopic topic)
         {
             Id = id;
             SendAt = sendAt;
             Sender = sender;
             Content = content;
+            Topic = topic;
         }
 
         public override bool Equals(object obj)
