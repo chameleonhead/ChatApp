@@ -4,19 +4,20 @@ using ChatApp.ViewModels;
 
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace ChatApp
+namespace ChatApp.Views
 {
     /// <summary>
-    /// MainWindow.xaml の相互作用ロジック
+    /// Page1.xaml の相互作用ロジック
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Page1 : Page
     {
         private TextSenderViewModel _TextSenderViewModel;
         private ChatHistoryViewModel _ChatHistoryViewModel;
 
-        public MainWindow()
+        public Page1()
         {
             InitializeComponent();
 
