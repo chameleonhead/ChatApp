@@ -29,6 +29,8 @@ namespace ChatApp.Views
             _TextSenderViewModel = new TextSenderViewModel(sendingService);
             ChatHistory.ItemsSource = _ChatHistoryViewModel.Entries;
             ChatSendPanel.DataContext = _TextSenderViewModel;
+
+            WindowTitle = Properties.Settings.Default.ChatHistoryFilePath;
         }
 
         private void TextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
