@@ -13,10 +13,11 @@ namespace ChatApp.ViewModels
 
         public ObservableCollection<ChatEntry> Entries { get; private set; }
 
-        public ChatHistoryViewModel(ChatReceivingService service)
+        public ChatHistoryViewModel()
         {
+            _service = ChatAppContext.Context.ChatReceivingService;
             Entries = new ObservableCollection<ChatEntry>();
-            _service = service;
+
             foreach (var m in _service.ReceivedMessages.Reverse())
             {
                 Entries.Add(m);

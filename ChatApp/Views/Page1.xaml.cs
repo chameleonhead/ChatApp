@@ -21,12 +21,8 @@ namespace ChatApp.Views
         {
             InitializeComponent();
 
-            var repository = new ChatEntryRepository(Properties.Settings.Default.ChatHistoryFilePath);
-            var sendingService = new ChatSendingService(repository);
-            var receivingService = new ChatReceivingService(repository);
-
-            _ChatHistoryViewModel = new ChatHistoryViewModel(receivingService);
-            _TextSenderViewModel = new TextSenderViewModel(sendingService);
+            _ChatHistoryViewModel = new ChatHistoryViewModel();
+            _TextSenderViewModel = new TextSenderViewModel();
             ChatHistory.ItemsSource = _ChatHistoryViewModel.Entries;
             ChatSendPanel.DataContext = _TextSenderViewModel;
 

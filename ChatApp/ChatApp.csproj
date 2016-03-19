@@ -71,9 +71,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppServices\ChatReceivingService.cs" />
+    <Compile Include="ChatAppContext.cs" />
     <Compile Include="DataStores\XDocumentRepository.cs" />
-    <Compile Include="Helpers\ChatEntryEqualsComparer.cs" />
     <Compile Include="Helpers\FlashWindowHelper.cs" />
+    <Compile Include="Models\ChatEntryEqualsComparer.cs" />
     <Compile Include="Models\ChatEntry.cs" />
     <Compile Include="Models\ChatEntryId.cs" />
     <Compile Include="Models\ChatTopic.cs" />

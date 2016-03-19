@@ -1,5 +1,4 @@
-﻿using ChatApp.AppServices;
-using ChatApp.ViewModels.Commands;
+﻿using ChatApp.ViewModels.Commands;
 
 using System;
 
@@ -21,15 +20,18 @@ namespace ChatApp.ViewModels
 
         public ChatSendCommand SendCommand { get; set; }
 
-        public TextSenderViewModel(ChatSendingService service)
+        public TextSenderViewModel()
         {
             string userName;
             string emailAddress;
-            
+
+            var sendingService = ChatAppContext.Context.ChatSendingService;
+
+
             userName = Properties.Settings.Default.UserName;
             emailAddress = Properties.Settings.Default.EmailAddress;
 
-            SendCommand = new ChatSendCommand(service) { Name = userName, EmailAddress = emailAddress };
+            SendCommand = new ChatSendCommand(sendingService) { Name = userName, EmailAddress = emailAddress };
             SendCommand.Executed += new EventHandler(SendCommand_Executed);
         }
 

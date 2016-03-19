@@ -1,8 +1,6 @@
-﻿using ChatApp.Models;
+﻿using System.Collections.Generic;
 
-using System.Collections.Generic;
-
-namespace ChatApp.Helpers
+namespace ChatApp.Models
 {
     public class ChatEntryEqualsComparer : IEqualityComparer<ChatEntry>
     {
