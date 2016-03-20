@@ -1,4 +1,5 @@
-﻿using ChatApp.DataStores;
+﻿using ChatApp.AppServices.AppEvents;
+using ChatApp.DataStores;
 using ChatApp.Models;
 
 using System;
@@ -9,8 +10,6 @@ using System.Windows;
 
 namespace ChatApp.AppServices
 {
-    public delegate void ChatMessageReceivedHandler(object sender, ChatEntry entry);
-
     class ChatReceivingService
     {
         public event ChatMessageReceivedHandler ChatMessageReceived;
@@ -38,16 +37,16 @@ namespace ChatApp.AppServices
             {
                 if (localEntries.Add(entry))
                 {
-                    RaiseChatEntryReceived(entry);
+                    RaiseChatEntryReceived(_repository.Source, entry);
                 }
             }
         }
 
-        private void RaiseChatEntryReceived(ChatEntry entry)
+        private void RaiseChatEntryReceived(ChatSource source, ChatEntry entry)
         {
             Application.Current.Dispatcher.BeginInvoke(new Action(() => {
                 if (ChatMessageReceived != null)
-                    ChatMessageReceived(this, entry);
+                    ChatMessageReceived(this, new ChatMessageReceivedEventArgs(source, entry));
             }));
         }
     }

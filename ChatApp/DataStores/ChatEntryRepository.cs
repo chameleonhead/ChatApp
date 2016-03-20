@@ -9,8 +9,10 @@ namespace ChatApp.DataStores
     class ChatEntryRepository : XDocumentRepository<ChatEntry>
     {
 
-        public ChatEntryRepository(string documentPath)
-            : base(documentPath)
+        public ChatSource Source { get; private set; }
+
+        public ChatEntryRepository(ChatSource source)
+            : base(source.DocumentUri)
         {
         }
 

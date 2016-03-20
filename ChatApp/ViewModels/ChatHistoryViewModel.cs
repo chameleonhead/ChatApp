@@ -1,9 +1,9 @@
 ﻿using ChatApp.AppServices;
+using ChatApp.AppServices.AppEvents;
 using ChatApp.Models;
 
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 
 namespace ChatApp.ViewModels
 {
@@ -30,13 +30,9 @@ namespace ChatApp.ViewModels
             _service.ChatMessageReceived -= ChatMessageReceived;
         }
 
-        void ChatMessageReceived(object sender, ChatEntry entry)
+        void ChatMessageReceived(object sender, ChatMessageReceivedEventArgs e)
         {
-            Entries.Insert(0, entry);
-
-            // Windowを点滅させる
-            var helper = new FlashWindowHelper(Application.Current);
-            helper.FlashApplicationWindow();
+            Entries.Insert(0, e.Entry);
         }
     }
 }

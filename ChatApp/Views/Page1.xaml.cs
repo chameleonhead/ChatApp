@@ -1,8 +1,9 @@
 ﻿using ChatApp.AppServices;
-using ChatApp.DataStores;
 using ChatApp.ViewModels;
+using ChatApp.Views.ViewHelpers;
 
 using System;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -27,6 +28,14 @@ namespace ChatApp.Views
             ChatSendPanel.DataContext = _TextSenderViewModel;
 
             WindowTitle = Properties.Settings.Default.ChatHistoryFilePath;
+            _ChatHistoryViewModel.Entries.CollectionChanged += new NotifyCollectionChangedEventHandler(Entries_CollectionChanged);
+        }
+
+        void Entries_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // Windowを点滅させる
+            var helper = new FlashWindowHelper(Application.Current);
+            helper.FlashApplicationWindow();
         }
 
         private void TextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)

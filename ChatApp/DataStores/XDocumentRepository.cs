@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -7,11 +8,12 @@ namespace ChatApp.DataStores
 {
     class XDocumentRepository<T>
     {
-        private string _documentPath;
+        private Uri _documentUri;
+        private XDocument _doc;
 
-        public XDocumentRepository(string documentPath)
+        public XDocumentRepository(Uri documentUri)
         {
-            _documentPath = documentPath;
+            _documentUri = documentUri;
         }
 
         public void Save(T entry)
@@ -20,7 +22,7 @@ namespace ChatApp.DataStores
             var doc = LoadDocument();
             doc.Root.Add(elem);
 
-            using (var writer = new StreamWriter(_documentPath))
+            using (var writer = new StreamWriter(_documentUri.AbsolutePath))
             {
                 doc.Save(writer);
             }
@@ -28,17 +30,17 @@ namespace ChatApp.DataStores
 
         public XDocument LoadDocument()
         {
-            XDocument doc;
-            if (File.Exists(_documentPath))
+            if (File.Exists(_documentUri.AbsolutePath))
             {
-                doc = XDocument.Load(_documentPath);
+                _doc = XDocument.Load(_documentUri.AbsolutePath);
             }
             else
             {
-                doc = new XDocument();
-                doc.Add(new XElement("ChatEntries"));
+                _doc = new XDocument();
+                _doc.Add(new XElement("ChatEntries"));
             }
-            return doc;
+
+            return _doc;
         }
 
         protected static XElement ToXElement(T obj)
