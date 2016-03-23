@@ -1,6 +1,9 @@
-﻿using ChatApp.ViewModels.Commands;
+﻿using ChatApp.AppServices;
+using ChatApp.Models;
+using ChatApp.ViewModels.Commands;
 
 using System;
+using System.Windows.Input;
 
 namespace ChatApp.ViewModels
 {
@@ -13,30 +16,35 @@ namespace ChatApp.ViewModels
             set
             {
                 _Content = value;
-                SendCommand.Content = _Content;
-                RaisePropertyChanged("Content");
+                OnPropertyChanged("Content");
             }
         }
 
-        public ChatSendCommand SendCommand { get; set; }
+        public ICommand SendCommand { get; set; }
+
+        private ChatSendingService _sendingService;
 
         public TextSenderViewModel()
+        {
+            _sendingService = ChatAppContext.Context.ChatSendingService;
+
+            SendCommand = new RelayCommand(
+                    new Action<object>(SendMessage),
+                    new Predicate<object>(o => !string.IsNullOrEmpty(Content))
+                );
+        }
+
+        void SendMessage(object parameter)
         {
             string userName;
             string emailAddress;
 
-            var sendingService = ChatAppContext.Context.ChatSendingService;
-
-
             userName = Properties.Settings.Default.UserName;
             emailAddress = Properties.Settings.Default.EmailAddress;
 
-            SendCommand = new ChatSendCommand(sendingService) { Name = userName, EmailAddress = emailAddress };
-            SendCommand.Executed += new EventHandler(SendCommand_Executed);
-        }
+            var user = new User() { Name = userName, EmailAddress = emailAddress };
 
-        void SendCommand_Executed(object sender, EventArgs e)
-        {
+            _sendingService.CreateChatEntry(DateTime.Now, user, Content);
             Content = string.Empty;
         }
     }

@@ -1,47 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 
 namespace ChatApp.ViewModels
 {
-    class AbstractViewModel : INotifyPropertyChanged, IDataErrorInfo
+    class AbstractViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void RaisePropertyChanged(string propertyName)
+        protected virtual void OnPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
+            this.VerifyPropertyName(propertyName);
 
-        // IDataErrorInfo用のエラーメッセージを保持する辞書
-        private Dictionary<string, string> _ErrorMessages = new Dictionary<string, string>();
-
-
-        // エラーメッセージのセット
-        protected void SetError(string propertyName, string errorMessage)
-        {
-            _ErrorMessages[propertyName] = errorMessage;
-        }
-
-        // エラーメッセージのクリア
-        protected void ClearErrror(string propertyName)
-        {
-            if (_ErrorMessages.ContainsKey(propertyName))
-                _ErrorMessages.Remove(propertyName);
-        }
-
-        public string Error
-        {
-            get { return string.Join(Environment.NewLine, _ErrorMessages.Select(r => r.Value)); }
-        }
-
-        public string this[string columnName]
-        {
-            get
+            PropertyChangedEventHandler handler = this.PropertyChanged;
+            if (handler != null)
             {
-                return _ErrorMessages.ContainsKey(columnName) ? _ErrorMessages[columnName] : null;
+                var e = new PropertyChangedEventArgs(propertyName);
+                handler(this, e);
+            }
+        }
+
+        [Conditional("DEBUG")]
+        [DebuggerStepThrough]
+        public void VerifyPropertyName(string propertyName)
+        {
+            if (TypeDescriptor.GetProperties(this)[propertyName] == null)
+            {
+                string msg = "不正なプロパティ名:" + propertyName;
+                Debug.Fail(msg);
             }
         }
     }

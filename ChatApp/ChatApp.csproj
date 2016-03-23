@@ -84,9 +84,8 @@
     <Compile Include="AppServices\ChatSendingService.cs" />
     <Compile Include="ViewModels\AbstractViewModel.cs" />
     <Compile Include="ViewModels\ChatHistoryViewModel.cs" />
-    <Compile Include="ViewModels\Commands\AbstractCommand.cs" />
+    <Compile Include="ViewModels\Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\TextSenderViewModel.cs" />
-    <Compile Include="ViewModels\Commands\ChatSendCommand.cs" />
     <Compile Include="Views\Page1.xaml.cs">
       <DependentUpon>Page1.xaml</DependentUpon>
     </Compile>
