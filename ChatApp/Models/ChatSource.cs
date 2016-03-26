@@ -17,5 +17,16 @@ namespace ChatApp.Models
         {
             DocumentUri = documentUri;
         }
+
+        public override int GetHashCode()
+        {
+            return this.DocumentUri.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ChatSource)) return false;
+            return this.DocumentUri.Equals(((ChatSource)obj).DocumentUri);
+        }
     }
 }

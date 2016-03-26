@@ -71,10 +71,18 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppServices\AppEvents\ChatMessageReceivedEvent.cs" />
+    <Compile Include="AppServices\ChatSourceLoadService.cs" />
     <Compile Include="Models\ChatSource.cs" />
     <Compile Include="AppServices\ChatReceivingService.cs" />
-    <Compile Include="ChatAppContext.cs" />
     <Compile Include="DataStores\XDocumentRepository.cs" />
+    <Compile Include="ViewModels\ChatViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChatView.xaml.cs">
+      <DependentUpon>ChatView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ViewHelpers\FlashWindowHelper.cs" />
     <Compile Include="Models\ChatEntryEqualsComparer.cs" />
     <Compile Include="Models\ChatEntry.cs" />
@@ -86,9 +94,6 @@
     <Compile Include="ViewModels\ChatHistoryViewModel.cs" />
     <Compile Include="ViewModels\Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\TextSenderViewModel.cs" />
-    <Compile Include="Views\Page1.xaml.cs">
-      <DependentUpon>Page1.xaml</DependentUpon>
-    </Compile>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -97,13 +102,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="Views\Page1.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\ChatView.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

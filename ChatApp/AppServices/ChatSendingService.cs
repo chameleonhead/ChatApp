@@ -14,11 +14,11 @@ namespace ChatApp.AppServices
             _Repository = repository;
         }
 
-        public void CreateChatEntry(DateTime time, User sender, string content)
+        public void CreateChatEntry(ChatSource source, DateTime time, User sender, string content)
         {
             var id = _Repository.NextIdentity();
             var entry = new ChatEntry(id, time, sender, content);
-            _Repository.Save(entry);
+            _Repository.Save(source, entry);
         }
     }
 }

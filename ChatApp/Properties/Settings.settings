@@ -8,11 +8,14 @@
     <Setting Name="EmailAddress" Type="System.String" Scope="User">
       <Value Profile="(Default)">mail@example.com</Value>
     </Setting>
+    <Setting Name="ReloadTimeInMillis" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
     <Setting Name="ChatHistoryFilePath" Type="System.String" Scope="User">
       <Value Profile="(Default)">Z:\Schedule\Chat.xml</Value>
     </Setting>
-    <Setting Name="ReloadTimeInMillis" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1000</Value>
+    <Setting Name="ChatHistoryFilePath2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Z:\Schedule\Chat2.xml</Value>
     </Setting>
   </Settings>
 </SettingsFile>

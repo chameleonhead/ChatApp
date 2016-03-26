@@ -20,13 +20,17 @@ namespace ChatApp.ViewModels
             }
         }
 
-        public ICommand SendCommand { get; set; }
+        public ChatSource Source { get; private set; }
+
+        public ICommand SendCommand { get; private set; }
 
         private ChatSendingService _sendingService;
 
-        public TextSenderViewModel()
+        public TextSenderViewModel(ChatSource source, ChatSendingService sendingService)
         {
-            _sendingService = ChatAppContext.Context.ChatSendingService;
+            _sendingService = sendingService;
+
+            Source = source;
 
             SendCommand = new RelayCommand(
                     new Action<object>(SendMessage),
@@ -44,7 +48,7 @@ namespace ChatApp.ViewModels
 
             var user = new User() { Name = userName, EmailAddress = emailAddress };
 
-            _sendingService.CreateChatEntry(DateTime.Now, user, Content);
+            _sendingService.CreateChatEntry(Source, DateTime.Now, user, Content);
             Content = string.Empty;
         }
     }

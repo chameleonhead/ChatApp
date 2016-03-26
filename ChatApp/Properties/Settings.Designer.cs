@@ -49,6 +49,18 @@ namespace ChatApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int ReloadTimeInMillis {
+            get {
+                return ((int)(this["ReloadTimeInMillis"]));
+            }
+            set {
+                this["ReloadTimeInMillis"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Z:\\Schedule\\Chat.xml")]
         public string ChatHistoryFilePath {
             get {
@@ -61,13 +73,13 @@ namespace ChatApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int ReloadTimeInMillis {
+        [global::System.Configuration.DefaultSettingValueAttribute("Z:\\Schedule\\Chat2.xml")]
+        public string ChatHistoryFilePath2 {
             get {
-                return ((int)(this["ReloadTimeInMillis"]));
+                return ((string)(this["ChatHistoryFilePath2"]));
             }
             set {
-                this["ReloadTimeInMillis"] = value;
+                this["ChatHistoryFilePath2"] = value;
             }
         }
     }

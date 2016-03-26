@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
@@ -8,39 +10,55 @@ namespace ChatApp.DataStores
 {
     class XDocumentRepository<T>
     {
-        private Uri _documentUri;
-        private XDocument _doc;
-
-        public XDocumentRepository(Uri documentUri)
+        private IEnumerable<Uri> _documentUris;
+        private IDictionary<Uri, XDocument> _docs;
+        protected IDictionary<Uri, XDocument> Docs
         {
-            _documentUri = documentUri;
+            get { return _docs; }
         }
 
-        public void Save(T entry)
+        protected XDocumentRepository(IEnumerable<Uri> documentUris)
+        {
+            _documentUris = documentUris;
+            Refresh();
+        }
+
+        protected void Save(Uri uri, T entry)
         {
             var elem = ToXElement(entry);
-            var doc = LoadDocument();
+            var doc = LoadDocument(uri);
             doc.Root.Add(elem);
 
-            using (var writer = new StreamWriter(_documentUri.AbsolutePath))
+            using (var writer = new StreamWriter(uri.AbsolutePath))
             {
                 doc.Save(writer);
             }
         }
 
-        public XDocument LoadDocument()
+        protected XDocument LoadDocument(Uri uri)
         {
-            if (File.Exists(_documentUri.AbsolutePath))
+            XDocument doc;
+            if (File.Exists(uri.AbsolutePath))
             {
-                _doc = XDocument.Load(_documentUri.AbsolutePath);
+                doc = XDocument.Load(uri.AbsolutePath);
             }
             else
             {
-                _doc = new XDocument();
-                _doc.Add(new XElement("ChatEntries"));
+                doc = new XDocument();
+                doc.Add(new XElement("ChatEntries"));
             }
 
-            return _doc;
+            return doc;
+        }
+
+        protected IDictionary<Uri, XDocument> LoadDocuments()
+        {
+            return _documentUris.ToDictionary(u => u, u => LoadDocument(u));
+        }
+
+        protected void Refresh()
+        {
+            _docs = LoadDocuments();
         }
 
         protected static XElement ToXElement(T obj)
