@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Runtime.InteropServices;
 
-namespace ChatApp.Views.ViewHelpers
+namespace ChatApp.ViewModels.Helpers
 {
     public class FlashWindowHelper
     {

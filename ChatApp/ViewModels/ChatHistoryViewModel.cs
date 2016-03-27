@@ -38,6 +38,7 @@ namespace ChatApp.ViewModels
 
         void ChatMessageReceived(object sender, ChatMessageReceivedEventArgs e)
         {
+            // TODO: いつかどこかへ移す(System.Windows名前空間はViewModel内では使用したくない...)
             Application.Current.Dispatcher.BeginInvoke(
                 new Action(() =>
                 {

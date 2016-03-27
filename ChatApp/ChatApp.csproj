@@ -83,7 +83,7 @@
     <Compile Include="Views\ChatView.xaml.cs">
       <DependentUpon>ChatView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ViewHelpers\FlashWindowHelper.cs" />
+    <Compile Include="ViewModels\Helpers\FlashWindowHelper.cs" />
     <Compile Include="Models\ChatEntryEqualsComparer.cs" />
     <Compile Include="Models\ChatEntry.cs" />
     <Compile Include="Models\ChatEntryId.cs" />
