@@ -37,8 +37,11 @@
         <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsTabStop="False" />
 
         <DockPanel Grid.Row="2" DataContext="{Binding TextSenderViewModel}">
-            <Button DockPanel.Dock="Right" Padding="20, 10" Content="送信" Command="{Binding SendCommand}" Name="SendButton" />
-            <TextBox DockPanel.Dock="Left" Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" KeyDown="TextBox_KeyDown" />
+            <DockPanel.InputBindings>
+                <KeyBinding Key="Return" Command="{Binding SendCommand}"  />
+            </DockPanel.InputBindings>
+            <Button DockPanel.Dock="Right" Padding="20, 10" Content="送信" Command="{Binding SendCommand}" />
+            <TextBox DockPanel.Dock="Left" Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" />
         </DockPanel>
     </Grid>
 </UserControl>

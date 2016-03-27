@@ -1,9 +1,7 @@
 ﻿using ChatApp.AppServices;
 using ChatApp.Models;
 using ChatApp.ViewModels.Commands;
-
 using System;
-using System.Windows.Input;
 
 namespace ChatApp.ViewModels
 {
@@ -20,9 +18,9 @@ namespace ChatApp.ViewModels
             }
         }
 
-        public ChatSource Source { get; private set; }
+        public RelayCommand SendCommand { get; private set; }
 
-        public ICommand SendCommand { get; private set; }
+        public ChatSource Source { get; private set; }
 
         private ChatSendingService _sendingService;
 
@@ -31,14 +29,18 @@ namespace ChatApp.ViewModels
             _sendingService = sendingService;
 
             Source = source;
-
             SendCommand = new RelayCommand(
-                    new Action<object>(SendMessage),
-                    new Predicate<object>(o => !string.IsNullOrEmpty(Content))
+                    o => SendMessage(),
+                    o => CanSendMessage()
                 );
         }
 
-        void SendMessage(object parameter)
+        public bool CanSendMessage()
+        {
+            return !string.IsNullOrEmpty(Content);
+        }
+
+        public void SendMessage()
         {
             string userName;
             string emailAddress;
