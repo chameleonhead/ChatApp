@@ -23,8 +23,6 @@ namespace ChatApp.ViewModels
             set
             {
                 _Source = value;
-                // OnPropertyChanged("Source");
-                // OnPropertyChanged("Title");
             }
         }
 
@@ -34,9 +32,6 @@ namespace ChatApp.ViewModels
 
             ChatHistoryViewModel = new ChatHistoryViewModel(source, receivingService);
             TextSenderViewModel = new TextSenderViewModel(source, sedingService);
-
-            OnPropertyChanged("ChatHistoryViewModel");
-            OnPropertyChanged("TextSenderViewModel");
         }
     }
 }

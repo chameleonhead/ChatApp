@@ -1,19 +1,30 @@
 ﻿using ChatApp.Models;
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ChatApp.AppServices
 {
     class ChatSourceLoadService
     {
-        public IEnumerable<ChatSource> Soucres { get; private set; }
-
         public ChatSourceLoadService()
         {
-            Soucres = new[] { 
-                new ChatSource("DefaulutSource", Properties.Settings.Default.ChatHistoryFilePath),
-                new ChatSource("AlternativeSource", Properties.Settings.Default.ChatHistoryFilePath2)
-            };
+        }
+
+        public IEnumerable<ChatSource> Load()
+        {
+            return Properties.Settings.Default.ChatHistoryFilePaths
+                .Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
+                .Distinct().OrderBy(s => s)
+                .Select(s => new ChatSource(new Uri(s)));
+        }
+
+        public void Save(IEnumerable<ChatSource> sources)
+        {
+            Properties.Settings.Default.ChatHistoryFilePaths
+                = string.Join(";", sources.Select(s => s.DocumentUri.AbsolutePath).ToArray());
+            Properties.Settings.Default.Save();
         }
     }
 }

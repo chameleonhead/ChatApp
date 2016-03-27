@@ -61,25 +61,13 @@ namespace ChatApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\Chat.xml")]
-        public string ChatHistoryFilePath {
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\Chat.xml;C:\\Temp\\Chat2.xml;C:\\Temp\\Chat3.xml;C:\\Temp\\Chat3.xml")]
+        public string ChatHistoryFilePaths {
             get {
-                return ((string)(this["ChatHistoryFilePath"]));
+                return ((string)(this["ChatHistoryFilePaths"]));
             }
             set {
-                this["ChatHistoryFilePath"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Temp\\Chat2.xml")]
-        public string ChatHistoryFilePath2 {
-            get {
-                return ((string)(this["ChatHistoryFilePath2"]));
-            }
-            set {
-                this["ChatHistoryFilePath2"] = value;
+                this["ChatHistoryFilePaths"] = value;
             }
         }
     }

@@ -38,15 +38,10 @@ namespace ChatApp.ViewModels
 
         void ChatMessageReceived(object sender, ChatMessageReceivedEventArgs e)
         {
-            // TODO: いつかどこかへ移す(System.Windows名前空間はViewModel内では使用したくない...)
-            Application.Current.Dispatcher.BeginInvoke(
-                new Action(() =>
-                {
-                    if (e.Source.Equals(Source))
-                    {
-                        Entries.Insert(0, e.Entry);
-                    }
-                }));
+            if (e.Source.Equals(Source))
+            {
+                Entries.Insert(0, e.Entry);
+            }
         }
     }
 }

@@ -71,6 +71,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AppServices\AppEvents\ChatMessageReceivedEvent.cs" />
+    <Compile Include="AppServices\AppEvents\NewChatEntryFoundEvent.cs" />
+    <Compile Include="AppServices\AppTasks\FileWatchingTask.cs" />
     <Compile Include="AppServices\ChatSourceLoadService.cs" />
     <Compile Include="Models\ChatSource.cs" />
     <Compile Include="AppServices\ChatReceivingService.cs" />

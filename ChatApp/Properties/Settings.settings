@@ -11,11 +11,8 @@
     <Setting Name="ReloadTimeInMillis" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1000</Value>
     </Setting>
-    <Setting Name="ChatHistoryFilePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Temp\Chat.xml</Value>
-    </Setting>
-    <Setting Name="ChatHistoryFilePath2" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Temp\Chat2.xml</Value>
+    <Setting Name="ChatHistoryFilePaths" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Temp\Chat.xml;C:\Temp\Chat2.xml;C:\Temp\Chat3.xml;C:\Temp\Chat3.xml</Value>
     </Setting>
   </Settings>
 </SettingsFile>

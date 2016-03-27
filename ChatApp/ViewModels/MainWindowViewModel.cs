@@ -21,7 +21,7 @@ namespace ChatApp.ViewModels
         public MainWindowViewModel()
         {
             var loadService = new ChatSourceLoadService();
-            var sources = loadService.Soucres;
+            var sources = loadService.Load();
 
             _ChatEntryRepository = new ChatEntryRepository(sources);
             _ChatReceivingService = new ChatReceivingService(_ChatEntryRepository);
@@ -49,14 +49,9 @@ namespace ChatApp.ViewModels
 
         void ChatMessageReceived(object sender, AppServices.AppEvents.ChatMessageReceivedEventArgs entry)
         {
-            // TODO: いつかどこかへ移す(System.Windows名前空間を使用しないように...)
-            Application.Current.Dispatcher.BeginInvoke(
-                new Action(() =>
-                {
-                    // Windowを点滅させる
-                    var helper = new FlashWindowHelper(Application.Current);
-                    helper.FlashApplicationWindow();
-                }));
+            // Windowを点滅させる
+            var helper = new FlashWindowHelper(Application.Current);
+            helper.FlashApplicationWindow();
         }
     }
 }
