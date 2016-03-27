@@ -12,10 +12,10 @@
       <Value Profile="(Default)">1000</Value>
     </Setting>
     <Setting Name="ChatHistoryFilePath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Z:\Schedule\Chat.xml</Value>
+      <Value Profile="(Default)">C:\Temp\Chat.xml</Value>
     </Setting>
     <Setting Name="ChatHistoryFilePath2" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Z:\Schedule\Chat2.xml</Value>
+      <Value Profile="(Default)">C:\Temp\Chat2.xml</Value>
     </Setting>
   </Settings>
 </SettingsFile>
