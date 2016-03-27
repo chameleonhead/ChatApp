@@ -1,12 +1,10 @@
 ﻿using ChatApp.AppServices;
-using ChatApp.AppServices.AppEvents;
 using ChatApp.DataStores;
 using ChatApp.Views.ViewHelpers;
 
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
 using System.Windows;
 
 
@@ -18,7 +16,7 @@ namespace ChatApp.ViewModels
         private ChatSendingService _ChatSendingService;
         private ChatEntryRepository _ChatEntryRepository;
 
-        public  ObservableCollection<ChatViewModel> ChatViewModels { get; private set; }
+        public ObservableCollection<ChatViewModel> ChatViewModels { get; private set; }
 
         public MainWindowViewModel()
         {
@@ -51,9 +49,13 @@ namespace ChatApp.ViewModels
 
         void ChatMessageReceived(object sender, AppServices.AppEvents.ChatMessageReceivedEventArgs entry)
         {
-            // Windowを点滅させる
-            var helper = new FlashWindowHelper(Application.Current);
-            helper.FlashApplicationWindow();
+            Application.Current.Dispatcher.BeginInvoke(
+                new Action(() =>
+                {
+                    // Windowを点滅させる
+                    var helper = new FlashWindowHelper(Application.Current);
+                    helper.FlashApplicationWindow();
+                }));
         }
     }
 }

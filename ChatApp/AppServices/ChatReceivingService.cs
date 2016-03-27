@@ -2,26 +2,49 @@
 using ChatApp.DataStores;
 using ChatApp.Models;
 
-using System;
 using System.Collections.Generic;
 using System.Timers;
 using System.Linq;
-using System.Windows;
 
 namespace ChatApp.AppServices
 {
     class ChatReceivingService
     {
+        private class ReceivedMessageStore : Dictionary<ChatSource, IEnumerable<ChatEntry>>
+        {
+            public new IEnumerable<ChatEntry> this[ChatSource key]
+            {
+                get
+                {
+                    if (!base.ContainsKey(key))
+                        base.Add(key, new HashSet<ChatEntry>(new ChatEntryEqualsComparer()));
+                    return base[key];
+                }
+            }
+
+            public bool Add(ChatSource source, ChatEntry entry)
+            {
+                return (this[source] as HashSet<ChatEntry>).Add(entry);
+            }
+
+            public new void Add(ChatSource source, IEnumerable<ChatEntry> entries)
+            {
+                var set = (this[source] as HashSet<ChatEntry>);
+                entries.ToList().ForEach(e => Add(source, e));
+            }
+        }
+
         public event ChatMessageReceivedHandler ChatMessageReceived;
 
         private ChatEntryRepository _repository;
-        private IDictionary<ChatSource, HashSet<ChatEntry>> localEntries;
+        private ReceivedMessageStore _localEntries;
+        private Timer _timer;
 
         public IDictionary<ChatSource, IEnumerable<ChatEntry>> ReceivedMessages 
         { 
             get 
             {
-                return localEntries.ToDictionary(kv => kv.Key, kv => kv.Value as IEnumerable<ChatEntry>); 
+                return _localEntries;
             } 
         }
 
@@ -29,29 +52,31 @@ namespace ChatApp.AppServices
         {
             _repository = repository;
 
-            localEntries = new Dictionary<ChatSource, HashSet<ChatEntry>>();
+            _localEntries = new ReceivedMessageStore();
             foreach (var kv in repository.FindAll())
             {
-                foreach (var e in kv.Value)
-                {
-                    AddEntry(kv.Key, e);
-                }
+                _localEntries.Add(kv.Key, kv.Value);
             }
 
-            Timer t = new Timer(Properties.Settings.Default.ReloadTimeInMillis);
-            t.Elapsed += new ElapsedEventHandler(t_Elapsed);
-            t.Enabled = true;
+            _timer = new Timer(Properties.Settings.Default.ReloadTimeInMillis);
+            _timer.Elapsed += FetchChatEntry;
+            _timer.Enabled = true;
         }
 
-        private void t_Elapsed(object sender, ElapsedEventArgs e)
+        ~ChatReceivingService()
+        {
+            _timer.Elapsed += FetchChatEntry;
+        }
+
+        private void FetchChatEntry(object sender, ElapsedEventArgs e)
         {
             var allEntries = _repository.FindAll();
             
             foreach (var source in allEntries.Keys)
             {
-                foreach (var entry in allEntries[source].Except(localEntries[source]))
+                foreach (var entry in allEntries[source].Except(_localEntries[source]))
                 {
-                    if (AddEntry(source, entry))
+                    if (_localEntries.Add(source, entry))
                     {
                         OnChatEntryReceived(source, entry);
                     }
@@ -59,22 +84,10 @@ namespace ChatApp.AppServices
             }
         }
 
-        private bool AddEntry(ChatSource source, ChatEntry entry)
-        {
-            if (!localEntries.ContainsKey(source))
-            {
-                localEntries.Add(source, new HashSet<ChatEntry>(new ChatEntryEqualsComparer()));
-            }
-            return localEntries[source].Add(entry);
-        }
-
         private void OnChatEntryReceived(ChatSource source, ChatEntry entry)
         {
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                if (ChatMessageReceived != null)
-                    ChatMessageReceived(this, new ChatMessageReceivedEventArgs(source, entry));
-            }));
+            if (ChatMessageReceived != null)
+                ChatMessageReceived(this, new ChatMessageReceivedEventArgs(source, entry));
         }
     }
 }

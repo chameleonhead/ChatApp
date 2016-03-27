@@ -2,8 +2,10 @@
 using ChatApp.AppServices.AppEvents;
 using ChatApp.Models;
 
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 
 namespace ChatApp.ViewModels
 {
@@ -36,10 +38,14 @@ namespace ChatApp.ViewModels
 
         void ChatMessageReceived(object sender, ChatMessageReceivedEventArgs e)
         {
-            if (e.Source.Equals(Source))
-            {
-                Entries.Insert(0, e.Entry);
-            }
+            Application.Current.Dispatcher.BeginInvoke(
+                new Action(() =>
+                {
+                    if (e.Source.Equals(Source))
+                    {
+                        Entries.Insert(0, e.Entry);
+                    }
+                }));
         }
     }
 }
