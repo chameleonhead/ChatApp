@@ -29,7 +29,7 @@ namespace ChatApp.DataStores
             var doc = LoadDocument(uri);
             doc.Root.Add(elem);
 
-            using (var writer = new StreamWriter(uri.AbsolutePath))
+            using (var writer = new StreamWriter(uri.LocalPath))
             {
                 doc.Save(writer);
             }
@@ -38,9 +38,9 @@ namespace ChatApp.DataStores
         protected XDocument LoadDocument(Uri uri)
         {
             XDocument doc;
-            if (File.Exists(uri.AbsolutePath))
+            if (File.Exists(uri.LocalPath))
             {
-                doc = XDocument.Load(uri.AbsolutePath);
+                doc = XDocument.Load(uri.LocalPath);
             }
             else
             {

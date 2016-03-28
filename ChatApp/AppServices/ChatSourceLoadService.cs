@@ -23,7 +23,7 @@ namespace ChatApp.AppServices
         public void Save(IEnumerable<ChatSource> sources)
         {
             Properties.Settings.Default.ChatHistoryFilePaths
-                = string.Join(";", sources.Select(s => s.DocumentUri.AbsolutePath).ToArray());
+                = string.Join(";", sources.Select(s => s.DocumentUri.LocalPath).ToArray());
             Properties.Settings.Default.Save();
         }
     }

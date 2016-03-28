@@ -12,7 +12,7 @@ namespace ChatApp.ViewModels
         {
             get
             {
-                return _Source != null ? _Source.DocumentUri.AbsolutePath : string.Empty;
+                return _Source != null ? _Source.DocumentUri.LocalPath : string.Empty;
             }
         }
 
