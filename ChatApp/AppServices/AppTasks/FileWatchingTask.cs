@@ -1,10 +1,12 @@
 ﻿using ChatApp.DataStores;
 using ChatApp.Models;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Timers;
-using System;
+
 using ChatApp.AppServices.AppEvents;
 
 namespace ChatApp.AppServices.AppTasks
@@ -83,7 +85,7 @@ namespace ChatApp.AppServices.AppTasks
                 {
                     if (_localEntries.Add(source, entry))
                     {
-                        _context.Post(new SendOrPostCallback(o => OnNewEntryFound(source, entry)), this);
+                        OnNewEntryFound(source, entry);
                     }
                 }
             }
@@ -91,8 +93,11 @@ namespace ChatApp.AppServices.AppTasks
 
         private void OnNewEntryFound(ChatSource source, ChatEntry entry)
         {
-            if (NewChatEntryFound != null)
-                NewChatEntryFound(this, new NewChatEntryFoundEventArgs(source, entry));
+            _context.Post(new SendOrPostCallback(o =>
+                {
+                    if (NewChatEntryFound != null)
+                        NewChatEntryFound(o, new NewChatEntryFoundEventArgs(source, entry));
+                }), this);
         }
     }
 }
