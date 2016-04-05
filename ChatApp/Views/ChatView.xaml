@@ -14,6 +14,12 @@
         </Grid.RowDefinitions>
 
         <ListView Grid.Row="0" DataContext="{Binding ChatHistoryViewModel}"  HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Entries}">
+            <ListView.CommandBindings>
+                <CommandBinding Command="Copy" Executed="CommandBinding_Executed" />
+            </ListView.CommandBindings>
+            <ListView.InputBindings>
+                <KeyBinding Key="C" Modifiers="Ctrl" Command="Copy" />
+            </ListView.InputBindings>
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid HorizontalAlignment="Stretch" Margin="8">
