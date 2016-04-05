@@ -1,13 +1,13 @@
-﻿using ChatApp.DataStores;
+﻿using ChatApp.AppServices.AppEvents;
+using ChatApp.DataStores;
 using ChatApp.Models;
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Timers;
-
-using ChatApp.AppServices.AppEvents;
 
 namespace ChatApp.AppServices.AppTasks
 {
@@ -16,7 +16,6 @@ namespace ChatApp.AppServices.AppTasks
         public event NewChatEntryFoundEventHandler NewChatEntryFound;
 
         private HashSet<ChatEntry> _localEntries;
-        private System.Timers.Timer _timer;
         private ChatEntryRepository _repository;
 
         private SynchronizationContext _context;
@@ -35,14 +34,11 @@ namespace ChatApp.AppServices.AppTasks
                 _localEntries.Add(entry);
             }
 
-            _timer = new System.Timers.Timer(reloadTimeInMillis);
-            _timer.Elapsed += FetchChatEntry;
-            _timer.Enabled = true;
-        }
-
-        ~ChatSourceWatchingTask()
-        {
-            _timer.Elapsed += FetchChatEntry;
+            var fsw = new FileSystemWatcher(Path.GetDirectoryName(source.DocumentUri.LocalPath), Path.GetFileName(source.DocumentUri.LocalPath));
+            fsw.Changed += new FileSystemEventHandler((o, e) => {
+                FetchChatEntry(this, e);
+            });
+            fsw.EnableRaisingEvents = true;
         }
 
         public IEnumerable<ChatEntry> ReceivedMessages
@@ -53,7 +49,7 @@ namespace ChatApp.AppServices.AppTasks
             }
         }
 
-        private void FetchChatEntry(object sender, ElapsedEventArgs e)
+        private void FetchChatEntry(object sender, EventArgs e)
         {
             var allEntries = _repository.FindAll();
 

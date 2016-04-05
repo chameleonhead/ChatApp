@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
@@ -19,12 +20,37 @@ namespace ChatApp.DataStores
             _rootElemName = rootElemName;
         }
 
+        FileStream WaitForFile(string fullPath, FileMode mode, FileAccess access, FileShare share)
+        {
+            for (int numTries = 0; numTries < 10; numTries++)
+            {
+                try
+                {
+                    FileStream fs = new FileStream(fullPath, mode, access, share);
+
+                    fs.ReadByte();
+                    fs.Seek(0, SeekOrigin.Begin);
+
+                    return fs;
+                }
+                catch (IOException)
+                {
+                    Thread.Sleep(50);
+                }
+            }
+
+            return null;
+        }
+
         protected XDocument LoadDocument()
         {
             XDocument doc;
             if (File.Exists(_documentUri.LocalPath))
             {
-                doc = XDocument.Load(_documentUri.LocalPath);
+                using (var fs = WaitForFile(_documentUri.LocalPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    doc = XDocument.Load(_documentUri.LocalPath);
+                }
             }
             else
             {
@@ -41,9 +67,12 @@ namespace ChatApp.DataStores
             var doc = LoadDocument();
             doc.Root.Add(elem);
 
-            using (var writer = new StreamWriter(_documentUri.LocalPath))
+            using (var fs = WaitForFile(_documentUri.LocalPath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
             {
-                doc.Save(writer);
+                using (var writer = new StreamWriter(fs))
+                {
+                    doc.Save(writer);
+                }
             }
         }
 
