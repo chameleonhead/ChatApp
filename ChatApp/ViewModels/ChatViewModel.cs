@@ -1,10 +1,18 @@
 ﻿using ChatApp.AppServices;
+using ChatApp.DataStores;
 using ChatApp.Models;
+using ChatApp.ViewModels.Helpers;
+
+using System.Windows;
 
 namespace ChatApp.ViewModels
 {
     class ChatViewModel : AbstractViewModel
     {
+        private ChatReceivingService _ChatReceivingService;
+        private ChatSendingService _ChatSendingService;
+        private ChatEntryRepository _ChatEntryRepository;
+
         public ChatHistoryViewModel ChatHistoryViewModel { get; private set; }
         public TextSenderViewModel TextSenderViewModel { get; private set; }
 
@@ -12,26 +20,65 @@ namespace ChatApp.ViewModels
         {
             get
             {
-                return _Source != null ? new System.IO.FileInfo(_Source.DocumentUri.LocalPath).Name : string.Empty;
+                return _source != null ? new System.IO.FileInfo(_source.DocumentUri.LocalPath).Name : string.Empty;
             }
         }
 
-        private ChatSource _Source;
-        public ChatSource Source 
+        private bool _isSelected;
+        public bool IsSelected
         {
-            get { return _Source; }
+            get
+            {
+                return _isSelected;
+            }
             set
             {
-                _Source = value;
+                if (_isSelected != value)
+                {
+                    _isSelected = value;
+                    _unreadCount = 0;
+                    OnPropertyChanged("IsSelected");
+                    OnPropertyChanged("UnreadCount");
+                }
             }
         }
 
-        public ChatViewModel(ChatSource source, ChatReceivingService receivingService, ChatSendingService sedingService)
+        private int _unreadCount;
+        public int UnreadCount
         {
-            Source = source;
+            get
+            {
+                return _unreadCount;
+            }
+            private set
+            {
+                _unreadCount = value;
+                OnPropertyChanged("UnreadCount");
+            }
+        }
 
-            ChatHistoryViewModel = new ChatHistoryViewModel(source, receivingService);
-            TextSenderViewModel = new TextSenderViewModel(source, sedingService);
+        private ChatSource _source;
+
+        public ChatViewModel(ChatSource source)
+        {
+            _source = source;
+
+            _ChatEntryRepository = new ChatEntryRepository(source);
+            _ChatReceivingService = new ChatReceivingService(source, _ChatEntryRepository);
+            _ChatSendingService = new ChatSendingService(_ChatEntryRepository);
+
+            ChatHistoryViewModel = new ChatHistoryViewModel(_ChatReceivingService);
+            TextSenderViewModel = new TextSenderViewModel(_ChatSendingService);
+            _ChatReceivingService.ChatMessageReceived += ChatMessageReceived;
+        }
+
+        void ChatMessageReceived(object sender, AppServices.AppEvents.ChatMessageReceivedEventArgs entry)
+        {
+            // Windowを点滅させる
+            var helper = new FlashWindowHelper(Application.Current);
+            helper.FlashApplicationWindow();
+
+            if (!IsSelected) UnreadCount++;
         }
     }
 }

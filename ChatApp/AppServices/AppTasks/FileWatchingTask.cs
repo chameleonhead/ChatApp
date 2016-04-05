@@ -13,48 +13,26 @@ namespace ChatApp.AppServices.AppTasks
 {
     class ChatSourceWatchingTask
     {
-        private class ReceivedMessageStore : Dictionary<ChatSource, IEnumerable<ChatEntry>>
-        {
-            public new IEnumerable<ChatEntry> this[ChatSource key]
-            {
-                get
-                {
-                    if (!base.ContainsKey(key))
-                        base.Add(key, new HashSet<ChatEntry>(new ChatEntryEqualsComparer()));
-                    return base[key];
-                }
-            }
-
-            public bool Add(ChatSource source, ChatEntry entry)
-            {
-                return (this[source] as HashSet<ChatEntry>).Add(entry);
-            }
-
-            public new void Add(ChatSource source, IEnumerable<ChatEntry> entries)
-            {
-                var set = (this[source] as HashSet<ChatEntry>);
-                entries.ToList().ForEach(e => Add(source, e));
-            }
-        }
-
         public event NewChatEntryFoundEventHandler NewChatEntryFound;
 
-        private ReceivedMessageStore _localEntries;
+        private HashSet<ChatEntry> _localEntries;
         private System.Timers.Timer _timer;
         private ChatEntryRepository _repository;
 
         private SynchronizationContext _context;
+        private ChatSource _source;
 
-        public ChatSourceWatchingTask(ChatEntryRepository repository, int reloadTimeInMillis)
+        public ChatSourceWatchingTask(ChatSource source, ChatEntryRepository repository, int reloadTimeInMillis)
         {
             _context = SynchronizationContext.Current;
 
             _repository = repository;
+            _source = source;
 
-            _localEntries = new ReceivedMessageStore();
-            foreach (var kv in _repository.FindAll())
+            _localEntries = new HashSet<ChatEntry>();
+            foreach (var entry in _repository.FindAll())
             {
-                _localEntries.Add(kv.Key, kv.Value);
+                _localEntries.Add(entry);
             }
 
             _timer = new System.Timers.Timer(reloadTimeInMillis);
@@ -67,7 +45,7 @@ namespace ChatApp.AppServices.AppTasks
             _timer.Elapsed += FetchChatEntry;
         }
 
-        public IDictionary<ChatSource, IEnumerable<ChatEntry>> ReceivedMessages
+        public IEnumerable<ChatEntry> ReceivedMessages
         {
             get
             {
@@ -79,24 +57,21 @@ namespace ChatApp.AppServices.AppTasks
         {
             var allEntries = _repository.FindAll();
 
-            foreach (var source in allEntries.Keys)
+            foreach (var entry in allEntries.Except(_localEntries))
             {
-                foreach (var entry in allEntries[source].Except(_localEntries[source]))
+                if (_localEntries.Add(entry))
                 {
-                    if (_localEntries.Add(source, entry))
-                    {
-                        OnNewEntryFound(source, entry);
-                    }
+                    OnNewEntryFound(entry);
                 }
             }
         }
 
-        private void OnNewEntryFound(ChatSource source, ChatEntry entry)
+        private void OnNewEntryFound(ChatEntry entry)
         {
             _context.Post(new SendOrPostCallback(o =>
                 {
                     if (NewChatEntryFound != null)
-                        NewChatEntryFound(o, new NewChatEntryFoundEventArgs(source, entry));
+                        NewChatEntryFound(o, new NewChatEntryFoundEventArgs(_source, entry));
                 }), this);
         }
     }

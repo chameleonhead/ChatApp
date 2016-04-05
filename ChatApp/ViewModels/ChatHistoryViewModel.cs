@@ -13,17 +13,15 @@ namespace ChatApp.ViewModels
     {
         private ChatReceivingService _service;
 
-        public ChatSource Source { get; private set; }
         public ObservableCollection<ChatEntry> Entries { get; private set; }
 
-        public ChatHistoryViewModel(ChatSource source, ChatReceivingService service)
+        public ChatHistoryViewModel(ChatReceivingService service)
         {
             _service = service;
 
-            Source = source;
             Entries = new ObservableCollection<ChatEntry>();
 
-            foreach (var m in _service.ReceivedMessages[Source].Reverse())
+            foreach (var m in _service.ReceivedMessages.Reverse())
             {
                 Entries.Add(m);
             }
@@ -38,10 +36,7 @@ namespace ChatApp.ViewModels
 
         void ChatMessageReceived(object sender, ChatMessageReceivedEventArgs e)
         {
-            if (e.Source.Equals(Source))
-            {
-                Entries.Insert(0, e.Entry);
-            }
+            Entries.Insert(0, e.Entry);
         }
     }
 }

@@ -10,55 +10,41 @@ namespace ChatApp.DataStores
 {
     class XDocumentRepository<T>
     {
-        private IEnumerable<Uri> _documentUris;
-        private IDictionary<Uri, XDocument> _docs;
-        protected IDictionary<Uri, XDocument> Docs
+        private Uri _documentUri;
+        private string _rootElemName;
+
+        protected XDocumentRepository(Uri documentUri, string rootElemName)
         {
-            get { return _docs; }
+            _documentUri = documentUri;
+            _rootElemName = rootElemName;
         }
 
-        protected XDocumentRepository(IEnumerable<Uri> documentUris)
-        {
-            _documentUris = documentUris;
-            Refresh();
-        }
-
-        protected void Save(Uri uri, T entry)
-        {
-            var elem = ToXElement(entry);
-            var doc = LoadDocument(uri);
-            doc.Root.Add(elem);
-
-            using (var writer = new StreamWriter(uri.LocalPath))
-            {
-                doc.Save(writer);
-            }
-        }
-
-        protected XDocument LoadDocument(Uri uri)
+        protected XDocument LoadDocument()
         {
             XDocument doc;
-            if (File.Exists(uri.LocalPath))
+            if (File.Exists(_documentUri.LocalPath))
             {
-                doc = XDocument.Load(uri.LocalPath);
+                doc = XDocument.Load(_documentUri.LocalPath);
             }
             else
             {
                 doc = new XDocument();
-                doc.Add(new XElement("ChatEntries"));
+                doc.Add(new XElement(_rootElemName));
             }
 
             return doc;
         }
 
-        protected IDictionary<Uri, XDocument> LoadDocuments()
+        protected void Save(T entry)
         {
-            return _documentUris.ToDictionary(u => u, u => LoadDocument(u));
-        }
+            var elem = ToXElement(entry);
+            var doc = LoadDocument();
+            doc.Root.Add(elem);
 
-        protected void Refresh()
-        {
-            _docs = LoadDocuments();
+            using (var writer = new StreamWriter(_documentUri.LocalPath))
+            {
+                doc.Save(writer);
+            }
         }
 
         protected static XElement ToXElement(T obj)

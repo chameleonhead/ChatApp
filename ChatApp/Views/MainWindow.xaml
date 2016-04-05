@@ -4,9 +4,34 @@
         xmlns:local="clr-namespace:ChatApp.Views"
         Title="MainWindow" Height="600" Width="360">
     <TabControl ItemsSource="{Binding ChatViewModels}" SelectedIndex="0">
+        <TabControl.ItemContainerStyle>
+            <Style TargetType="TabItem">
+                <Setter Property="IsSelected"
+                    Value="{Binding Path=DataContext.IsSelected, RelativeSource={RelativeSource Mode=Self}}"/>
+            </Style>
+        </TabControl.ItemContainerStyle>
         <TabControl.ItemTemplate>
             <DataTemplate>
-                <TextBlock Text="{Binding Title}" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding Title}" VerticalAlignment="Center" />
+                    <ContentControl Margin="5, 1, 1, 1" VerticalAlignment="Center">
+                        <ContentControl.Style>
+                            <Style TargetType="{x:Type ContentControl}">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding UnreadCount}" Value="0">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                        <ContentControl.Content>
+                            <Border BorderBrush="DimGray" BorderThickness="2" Background="DimGray" CornerRadius="7" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding UnreadCount}" Foreground="White" Padding="5, 0" FontSize="9" VerticalAlignment="Center" />
+                            </Border>
+                        </ContentControl.Content>
+                    </ContentControl>
+                </StackPanel>
             </DataTemplate>
         </TabControl.ItemTemplate>
         <TabControl.ContentTemplate>

@@ -20,15 +20,12 @@ namespace ChatApp.ViewModels
 
         public RelayCommand SendCommand { get; private set; }
 
-        public ChatSource Source { get; private set; }
-
         private ChatSendingService _sendingService;
 
-        public TextSenderViewModel(ChatSource source, ChatSendingService sendingService)
+        public TextSenderViewModel(ChatSendingService sendingService)
         {
             _sendingService = sendingService;
 
-            Source = source;
             SendCommand = new RelayCommand(
                     o => SendMessage(),
                     o => CanSendMessage()
@@ -50,7 +47,7 @@ namespace ChatApp.ViewModels
 
             var user = new User() { Name = userName, EmailAddress = emailAddress };
 
-            _sendingService.CreateChatEntry(Source, DateTime.Now, user, Content);
+            _sendingService.CreateChatEntry(DateTime.Now, user, Content);
             Content = string.Empty;
         }
     }

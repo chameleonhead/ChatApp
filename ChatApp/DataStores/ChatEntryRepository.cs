@@ -8,12 +8,12 @@ namespace ChatApp.DataStores
 {
     class ChatEntryRepository : XDocumentRepository<ChatEntry>
     {
-        private IEnumerable<ChatSource> _Sources;
+        private ChatSource _Source;
 
-        public ChatEntryRepository(IEnumerable<ChatSource> source)
-            : base(source.Select(s => s.DocumentUri))
+        public ChatEntryRepository(ChatSource source)
+            : base(source.DocumentUri, "ChatEntries")
         {
-            _Sources = source;
+            _Source = source;
         }
 
         public ChatEntryId NextIdentity()
@@ -21,9 +21,10 @@ namespace ChatApp.DataStores
             return new ChatEntryId() { Id = Guid.NewGuid() };
         }
 
-        public ChatEntry Find(ChatSource source, ChatEntryId id)
+        public ChatEntry Find(ChatEntryId id)
         {
-            var elem = Docs[source.DocumentUri].Root.Elements("ChatEntry")
+            var doc = LoadDocument();
+            var elem = doc.Root.Elements("ChatEntry")
                 .Where(e => e.Attributes("Id").Any(a => a.Value.Equals(id.Id)))
                 .SingleOrDefault();
             if (elem != null)
@@ -35,9 +36,10 @@ namespace ChatApp.DataStores
             return null;
         }
 
-        public IEnumerable<ChatEntry> FindAll(ChatSource source)
+        public IEnumerable<ChatEntry> FindAll()
         {
-            var elems = Docs[source.DocumentUri].Root.Elements("ChatEntry");
+            var doc = LoadDocument();
+            var elems = doc.Root.Elements("ChatEntry");
             foreach (var elem in elems)
             {
                 var entry = FromXElement(elem);
@@ -45,15 +47,9 @@ namespace ChatApp.DataStores
             }
         }
 
-        public IDictionary<ChatSource, IEnumerable<ChatEntry>> FindAll()
+        public new void Save(ChatEntry entry)
         {
-            Refresh(); // TODO:ちょっとかっこ悪いので、キャッシュ処理について本気で考える
-            return _Sources.ToDictionary(s => s, s => FindAll(s));
-        }
-
-        public void Save(ChatSource source, ChatEntry entry)
-        {
-            base.Save(source.DocumentUri, entry);
+            base.Save(entry);
         }
     }
 }

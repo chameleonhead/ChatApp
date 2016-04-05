@@ -13,7 +13,7 @@ namespace ChatApp.AppServices
 
         private ChatSourceWatchingTask _task;
 
-        public IDictionary<ChatSource, IEnumerable<ChatEntry>> ReceivedMessages 
+        public IEnumerable<ChatEntry> ReceivedMessages 
         { 
             get 
             {
@@ -21,9 +21,9 @@ namespace ChatApp.AppServices
             } 
         }
 
-        public ChatReceivingService(ChatEntryRepository repository)
+        public ChatReceivingService(ChatSource source, ChatEntryRepository repository)
         {
-            _task = new ChatSourceWatchingTask(repository, Properties.Settings.Default.ReloadTimeInMillis);
+            _task = new ChatSourceWatchingTask(source, repository, Properties.Settings.Default.ReloadTimeInMillis);
             _task.NewChatEntryFound += NewChatEntryFoundHandler;
         }
 

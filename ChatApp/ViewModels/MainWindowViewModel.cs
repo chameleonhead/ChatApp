@@ -1,21 +1,13 @@
 ﻿using ChatApp.AppServices;
-using ChatApp.DataStores;
-using ChatApp.ViewModels.Helpers;
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
-
 
 namespace ChatApp.ViewModels
 {
     class MainWindowViewModel : AbstractViewModel
     {
-        private ChatReceivingService _ChatReceivingService;
-        private ChatSendingService _ChatSendingService;
-        private ChatEntryRepository _ChatEntryRepository;
-
         public ObservableCollection<ChatViewModel> ChatViewModels { get; private set; }
 
         public MainWindowViewModel()
@@ -23,35 +15,15 @@ namespace ChatApp.ViewModels
             var loadService = new ChatSourceLoadService();
             var sources = loadService.Load();
 
-            _ChatEntryRepository = new ChatEntryRepository(sources);
-            _ChatReceivingService = new ChatReceivingService(_ChatEntryRepository);
-            _ChatSendingService = new ChatSendingService(_ChatEntryRepository);
-
             var chatViews = new List<ChatViewModel>();
 
             foreach (var s in sources)
             {
-                chatViews.Add(
-                        new ChatViewModel(s, _ChatReceivingService, _ChatSendingService)
-                    );
+                chatViews.Add(new ChatViewModel(s));
             }
 
             ChatViewModels = new ObservableCollection<ChatViewModel>(chatViews);
             OnPropertyChanged("ChatViewModels");
-
-            _ChatReceivingService.ChatMessageReceived += ChatMessageReceived;
-        }
-
-        ~MainWindowViewModel()
-        {
-            _ChatReceivingService.ChatMessageReceived -= ChatMessageReceived;
-        }
-
-        void ChatMessageReceived(object sender, AppServices.AppEvents.ChatMessageReceivedEventArgs entry)
-        {
-            // Windowを点滅させる
-            var helper = new FlashWindowHelper(Application.Current);
-            helper.FlashApplicationWindow();
         }
     }
 }
