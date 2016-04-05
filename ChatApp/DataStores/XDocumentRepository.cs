@@ -67,7 +67,7 @@ namespace ChatApp.DataStores
             var doc = LoadDocument();
             doc.Root.Add(elem);
 
-            using (var fs = WaitForFile(_documentUri.LocalPath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+            using (var fs = WaitForFile(_documentUri.LocalPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
             {
                 using (var writer = new StreamWriter(fs))
                 {
