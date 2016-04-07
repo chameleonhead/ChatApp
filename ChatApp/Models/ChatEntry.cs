@@ -3,18 +3,18 @@ using System.Collections.Generic;
 
 namespace ChatApp.Models
 {
-    public class ChatEntry
+    public partial class ChatEntry
     {
         public ChatEntryId Id { get; set; }
         public DateTime SendAt { get; set; }
         public User Sender { get; set; }
-        public string Content { get; set; }
+        public IChatContent Content { get; set; }
 
         internal ChatEntry()
         {
         }
 
-        public ChatEntry(ChatEntryId id, DateTime sendAt, User sender, string content)
+        public ChatEntry(ChatEntryId id, DateTime sendAt, User sender, IChatContent content)
         {
             Id = id;
             SendAt = sendAt;

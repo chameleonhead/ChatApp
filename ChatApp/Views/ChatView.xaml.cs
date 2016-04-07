@@ -21,8 +21,9 @@ namespace ChatApp.Views
             var vw = e.OriginalSource as ListView;
             if (vw == null) return;
 
-            var ce = vw.SelectedItems.Cast<ChatApp.Models.ChatEntry>();
-            Clipboard.SetText(string.Join(Environment.NewLine, ce.Select(ent => ent.Content).ToArray()));
+            var entries = vw.SelectedItems.Cast<ChatApp.Models.ChatEntry>();
+            var contents = entries.Select(ent => ent.Content).Cast<ChatApp.Models.TextContent>();
+            Clipboard.SetText(string.Join(Environment.NewLine, contents.Select(c => c.Value).ToArray()));
         }
     }
 }
