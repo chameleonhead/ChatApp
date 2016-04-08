@@ -29,13 +29,15 @@ namespace ChatApp.Models
 
     class DataContent : IChatContent
     {
-        public DataContent(ContentType mimeType, byte[] value)
+        public DataContent(ContentType mimeType, string fileName, byte[] value)
         {
             this.ContentType = mimeType;
+            this.FileName = fileName;
             this.Value = value;
         }
 
         public ContentType ContentType { get; private set; }
+        public string FileName { get; private set; }
         public byte[] Value { get; private set; }
 
         object IChatContent.Value
@@ -47,7 +49,7 @@ namespace ChatApp.Models
     class ImageContent : DataContent
     {
         public ImageContent(DataContent data)
-            : base(data.ContentType, data.Value)
+            : base(data.ContentType, data.FileName, data.Value)
         {
             Image = CreateImage(Value);
         }

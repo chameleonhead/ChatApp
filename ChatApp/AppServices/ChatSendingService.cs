@@ -21,10 +21,10 @@ namespace ChatApp.AppServices
             _Repository.Save(entry);
         }
 
-        public void CreateChatEntry(DateTime time, User sender, string contentTypeString, byte[] data)
+        public void CreateChatEntry(DateTime time, User sender, string contentTypeString, string fileName, byte[] data)
         {
             var id = _Repository.NextIdentity();
-            var dc = new DataContent(new System.Net.Mime.ContentType(contentTypeString), data);
+            var dc = new DataContent(new System.Net.Mime.ContentType(contentTypeString), fileName, data);
             var entry = new ChatEntry(id, time, sender, dc);
             _Repository.Save(entry);
         }

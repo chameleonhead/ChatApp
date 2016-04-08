@@ -7,7 +7,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <DockPanel>
         <DockPanel.InputBindings>
-            <KeyBinding Key="Return" Command="{Binding SendCommand}"  />
+            <KeyBinding Key="Return" Command="{Binding SendCommand}" />
         </DockPanel.InputBindings>
         <Button DockPanel.Dock="Right" Padding="20, 10" Content="送信" Command="{Binding SendCommand}" />
         <TextBox DockPanel.Dock="Left" Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" />

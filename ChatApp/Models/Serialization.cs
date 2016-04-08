@@ -62,16 +62,26 @@ namespace ChatApp.Models
 
         public void ReadXml(XmlReader reader)
         {
-            reader.Read();
-
             // IDを取得
-            reader.ReadStartElement("Id");
-            reader.ReadStartElement("Id");
             var id = new ChatEntryId();
-            id.Id = new Guid(reader.ReadContentAsString());
+            if (reader.HasAttributes)
+            {
+                reader.MoveToAttribute("Id");
+                id.Id = new Guid(reader.Value);
+
+                reader.Read();
+            }
+            else
+            {
+                reader.Read();
+
+                reader.ReadStartElement("Id");
+                reader.ReadStartElement("Id");
+                id.Id = new Guid(reader.ReadContentAsString());
+                reader.ReadEndElement();
+                reader.ReadEndElement();
+            }
             Id = id;
-            reader.ReadEndElement();
-            reader.ReadEndElement();
 
             // SendAtを取得
             reader.ReadStartElement("SendAt");
@@ -97,12 +107,17 @@ namespace ChatApp.Models
             reader.ReadStartElement("Content");
             if (reader.HasAttributes)
             {
-                reader.MoveToFirstAttribute();
+                reader.MoveToAttribute("ContentType");
                 reader.ReadAttributeValue();
                 var mime = reader.Value.ToString();
+
+                reader.MoveToAttribute("FileName");
+                reader.ReadAttributeValue();
+                var fileName = reader.Value.ToString();
+                
                 var data = Convert.FromBase64String(reader.ReadContentAsString());
 
-                var dataContent = new DataContent(new ContentType(mime), data);
+                var dataContent = new DataContent(new ContentType(mime), fileName, data);
 
                 if (mime.Contains("image"))
                 {
@@ -122,19 +137,17 @@ namespace ChatApp.Models
 
         public void WriteXml(XmlWriter writer)
         {
-            // IDを取得
-            writer.WriteStartElement("Id");
-            writer.WriteStartElement("Id");
+            // IDを書き込み
+            writer.WriteStartAttribute("Id");
             writer.WriteString(Id.Id.ToString());
-            writer.WriteEndElement();
-            writer.WriteEndElement();
+            writer.WriteEndAttribute();
 
-            // SendAtを取得
+            // SendAtを書き込み
             writer.WriteStartElement("SendAt");
             writer.WriteValue(SendAt);
             writer.WriteEndElement();
 
-            // Senderを取得
+            // Senderを書き込み
             writer.WriteStartElement("Sender");
 
             writer.WriteStartElement("Name");
@@ -147,7 +160,7 @@ namespace ChatApp.Models
 
             writer.WriteEndElement();
 
-            // Contentを取得
+            // Contentを書き込み
             writer.WriteStartElement("Content");
             if (Content.GetType() == typeof(TextContent))
             {
@@ -159,6 +172,10 @@ namespace ChatApp.Models
                 var dc = (DataContent)Content;
                 writer.WriteStartAttribute("ContentType");
                 writer.WriteString(dc.ContentType.Name);
+                writer.WriteEndAttribute();
+
+                writer.WriteStartAttribute("FileName");
+                writer.WriteString(dc.FileName);
                 writer.WriteEndAttribute();
 
                 writer.WriteString(Convert.ToBase64String(dc.Value));
