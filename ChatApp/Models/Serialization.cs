@@ -102,7 +102,7 @@ namespace ChatApp.Models
                 var mime = reader.Value.ToString();
                 var data = Convert.FromBase64String(reader.ReadContentAsString());
 
-                var dataContent = new DataContent(data, new ContentType(mime));
+                var dataContent = new DataContent(new ContentType(mime), data);
 
                 if (mime.Contains("image"))
                 {

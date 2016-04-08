@@ -26,6 +26,7 @@ namespace ChatApp
         void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             MessageBox.Show(e.Exception.Message + "\n" + e.Exception.StackTrace);
+            e.Handled = true;
             Shutdown(-1);
         }
     }

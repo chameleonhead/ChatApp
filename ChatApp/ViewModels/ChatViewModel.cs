@@ -14,7 +14,7 @@ namespace ChatApp.ViewModels
         private ChatEntryRepository _ChatEntryRepository;
 
         public ChatHistoryViewModel ChatHistoryViewModel { get; private set; }
-        public TextSenderViewModel TextSenderViewModel { get; private set; }
+        public ChatSenderViewModel TextSenderViewModel { get; private set; }
 
         public string Title
         {
@@ -68,7 +68,7 @@ namespace ChatApp.ViewModels
             _ChatSendingService = new ChatSendingService(_ChatEntryRepository);
 
             ChatHistoryViewModel = new ChatHistoryViewModel(_ChatReceivingService);
-            TextSenderViewModel = new TextSenderViewModel(_ChatSendingService);
+            TextSenderViewModel = new ChatSenderViewModel(_ChatSendingService);
             _ChatReceivingService.ChatMessageReceived += ChatMessageReceived;
         }
 

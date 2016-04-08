@@ -5,15 +5,18 @@ using System;
 
 namespace ChatApp.ViewModels
 {
-    class TextSenderViewModel : AbstractViewModel
+    class ChatSenderViewModel : AbstractViewModel
     {
-        private string _Content { get; set; }
+        private User _user;
+
+        private string _content;
+
         public string Content
         {
-            get { return _Content; }
+            get { return _content; }
             set
             {
-                _Content = value;
+                _content = value;
                 OnPropertyChanged("Content");
             }
         }
@@ -22,9 +25,14 @@ namespace ChatApp.ViewModels
 
         private ChatSendingService _sendingService;
 
-        public TextSenderViewModel(ChatSendingService sendingService)
+        public ChatSenderViewModel(ChatSendingService sendingService)
         {
             _sendingService = sendingService;
+
+            var userName = Properties.Settings.Default.UserName;
+            var emailAddress = Properties.Settings.Default.EmailAddress;
+
+            _user = new User() { Name = userName, EmailAddress = emailAddress };
 
             SendCommand = new RelayCommand(
                     o => SendMessage(),
@@ -39,15 +47,13 @@ namespace ChatApp.ViewModels
 
         public void SendMessage()
         {
-            string userName;
-            string emailAddress;
+            _sendingService.CreateChatEntry(DateTime.Now, _user, Content);
+            Content = string.Empty;
+        }
 
-            userName = Properties.Settings.Default.UserName;
-            emailAddress = Properties.Settings.Default.EmailAddress;
-
-            var user = new User() { Name = userName, EmailAddress = emailAddress };
-
-            _sendingService.CreateChatEntry(DateTime.Now, user, Content);
+        public void SendFile(string contentTypeString, byte[] data)
+        {
+            _sendingService.CreateChatEntry(DateTime.Now, _user, contentTypeString, data);
             Content = string.Empty;
         }
     }

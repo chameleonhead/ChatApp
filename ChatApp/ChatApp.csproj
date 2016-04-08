@@ -81,6 +81,12 @@
     <Compile Include="Models\Serialization.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Views\ChatHistoryView.xaml.cs">
+      <DependentUpon>ChatHistoryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChatSenderView.xaml.cs">
+      <DependentUpon>ChatSenderView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -97,7 +103,15 @@
     <Compile Include="ViewModels\AbstractViewModel.cs" />
     <Compile Include="ViewModels\ChatHistoryViewModel.cs" />
     <Compile Include="ViewModels\Commands\RelayCommand.cs" />
-    <Compile Include="ViewModels\TextSenderViewModel.cs" />
+    <Compile Include="ViewModels\ChatSenderViewModel.cs" />
+    <Page Include="Views\ChatHistoryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ChatSenderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
