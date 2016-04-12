@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net.Mime;
 using System.Runtime.Serialization;
 using System.Windows.Media.Imaging;
 using System.Xml.Serialization;
@@ -29,14 +28,14 @@ namespace ChatApp.Models
 
     class DataContent : IChatContent
     {
-        public DataContent(ContentType mimeType, string fileName, byte[] value)
+        public DataContent(ChatContentType mimeType, string fileName, byte[] value)
         {
             this.ContentType = mimeType;
             this.FileName = fileName;
             this.Value = value;
         }
 
-        public ContentType ContentType { get; private set; }
+        public ChatContentType ContentType { get; private set; }
         public string FileName { get; private set; }
         public byte[] Value { get; private set; }
 

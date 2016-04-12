@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Mime;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
@@ -104,22 +103,23 @@ namespace ChatApp.Models
             reader.ReadEndElement();
 
             // Contentを取得
-            reader.ReadStartElement("Content");
             if (reader.HasAttributes)
             {
                 reader.MoveToAttribute("ContentType");
                 reader.ReadAttributeValue();
-                var mime = reader.Value.ToString();
+                var contentType = (ChatContentType)Enum.Parse(typeof(ChatContentType), reader.Value.ToString(), true);
 
                 reader.MoveToAttribute("FileName");
                 reader.ReadAttributeValue();
                 var fileName = reader.Value.ToString();
-                
+
+                reader.MoveToElement();
+                reader.ReadStartElement("Content");
                 var data = Convert.FromBase64String(reader.ReadContentAsString());
 
-                var dataContent = new DataContent(new ContentType(mime), fileName, data);
+                var dataContent = new DataContent(ChatContentType.Image, fileName, data);
 
-                if (mime.Contains("image"))
+                if (contentType == ChatContentType.Image)
                 {
                     Content = new ImageContent(dataContent);
                 }
@@ -127,12 +127,14 @@ namespace ChatApp.Models
                 {
                     Content = dataContent;
                 }
+                reader.ReadEndElement();
             }
             else
             {
+                reader.ReadStartElement("Content");
                 Content = new TextContent(reader.ReadContentAsString());
+                reader.ReadEndElement();
             }
-            reader.ReadEndElement();
         }
 
         public void WriteXml(XmlWriter writer)
@@ -171,7 +173,7 @@ namespace ChatApp.Models
             {
                 var dc = (DataContent)Content;
                 writer.WriteStartAttribute("ContentType");
-                writer.WriteString(dc.ContentType.Name);
+                writer.WriteString(Enum.GetName(typeof(ChatContentType), dc.ContentType));
                 writer.WriteEndAttribute();
 
                 writer.WriteStartAttribute("FileName");

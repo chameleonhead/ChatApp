@@ -75,6 +75,7 @@
     <Compile Include="AppServices\AppTasks\FileWatchingTask.cs" />
     <Compile Include="AppServices\ChatSourceLoadService.cs" />
     <Compile Include="Models\ChatContent.cs" />
+    <Compile Include="Models\ChatContentType.cs" />
     <Compile Include="Models\ChatSource.cs" />
     <Compile Include="AppServices\ChatReceivingService.cs" />
     <Compile Include="DataStores\XDocumentRepository.cs" />

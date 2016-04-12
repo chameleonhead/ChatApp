@@ -12,7 +12,7 @@
                 <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Path=Value}" TextWrapping="Wrap" />
             </DataTemplate>
             <DataTemplate DataType="{x:Type model:ImageContent}">
-                <Image Source="{Binding Image}" Width="{Binding RelativeSource={RelativeSource Self}, Path=Source.PixelWidth}" Height="{Binding RelativeSource={RelativeSource Self}, Path=Source.PixelHeight}" />
+                <Image Source="{Binding Image}" />
             </DataTemplate>
             <DataTemplate DataType="{x:Type model:DataContent}">
 

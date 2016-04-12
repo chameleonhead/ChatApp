@@ -51,9 +51,15 @@ namespace ChatApp.ViewModels
             Content = string.Empty;
         }
 
-        public void SendFile(string contentTypeString, string fileName, byte[] data)
+        public void SendImage(string fileName, byte[] data)
         {
-            _sendingService.CreateChatEntry(DateTime.Now, _user, contentTypeString, fileName, data);
+            _sendingService.CreateChatEntry(DateTime.Now, _user, ChatContentType.Image, fileName, data);
+            Content = string.Empty;
+        }
+
+        public void SendFile(string fileName, byte[] data)
+        {
+            _sendingService.CreateChatEntry(DateTime.Now, _user, ChatContentType.File, fileName, data);
             Content = string.Empty;
         }
     }
