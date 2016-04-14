@@ -135,7 +135,7 @@ namespace ChatApp.Models
                 reader.ReadStartElement("Content");
                 var data = Convert.FromBase64String(reader.ReadContentAsString());
 
-                var dataContent = new DataContent(ChatContentType.Image, fileName, data);
+                var dataContent = new DataContent(contentType, fileName, data);
 
                 if (contentType == ChatContentType.Image)
                 {
