@@ -80,6 +80,8 @@
     <Compile Include="AppServices\ChatReceivingService.cs" />
     <Compile Include="DataStores\XDocumentRepository.cs" />
     <Compile Include="Models\Serialization.cs" />
+    <Compile Include="ViewModels\ChatContentViewModel.cs" />
+    <Compile Include="ViewModels\ChatEntryViewModel.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\ChatHistoryView.xaml.cs">

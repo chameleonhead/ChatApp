@@ -29,7 +29,8 @@ namespace ChatApp.AppServices
 
         ~ChatReceivingService()
         {
-            _task.NewChatEntryFound -= NewChatEntryFoundHandler;
+            if (_task != null)
+                _task.NewChatEntryFound -= NewChatEntryFoundHandler;
         }
 
         private void NewChatEntryFoundHandler(object sender, NewChatEntryFoundEventArgs e)

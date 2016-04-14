@@ -65,13 +65,31 @@ namespace ChatApp.Models
             var id = new ChatEntryId();
             if (reader.HasAttributes)
             {
-                reader.MoveToAttribute("Id");
-                id.Id = new Guid(reader.Value);
+                reader.MoveToFirstAttribute();
+                if (reader.LocalName == "Id")
+                {
+                    reader.MoveToAttribute("Id");
+                    id.Id = new Guid(reader.Value);
 
-                reader.Read();
+                    reader.Read();
+                }
+                else
+                {
+                    reader.MoveToElement();
+
+                    // コピペコードを後で直す
+                    reader.Read();
+
+                    reader.ReadStartElement("Id");
+                    reader.ReadStartElement("Id");
+                    id.Id = new Guid(reader.ReadContentAsString());
+                    reader.ReadEndElement();
+                    reader.ReadEndElement();
+                }
             }
             else
             {
+                // コピペコードを後で直す
                 reader.Read();
 
                 reader.ReadStartElement("Id");
