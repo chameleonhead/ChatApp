@@ -22,8 +22,30 @@ namespace ChatApp.Views
             if (vw == null) return;
 
             var entries = vw.SelectedItems.OfType<ChatApp.ViewModels.ChatEntryViewModel>();
-            var contents = entries.Select(ent => ent.Content).OfType<ChatApp.ViewModels.TextContentViewModel>();
-            Clipboard.SetText(string.Join(Environment.NewLine, contents.Select(c => string.IsNullOrEmpty(c.Content) ? "" : c.Content.Replace("\n", Environment.NewLine)).ToArray()));
+            var textContents = entries.Select(ent => ent.Content).OfType<ChatApp.ViewModels.TextContentViewModel>();
+            if (textContents.Any())
+            {
+                Clipboard.SetText(string.Join(Environment.NewLine, textContents.Select(c => string.IsNullOrEmpty(c.Content) ? "" : c.Content.Replace("\n", Environment.NewLine)).ToArray()));
+                return;
+            }
+
+            var imageContents = entries.Select(ent => ent.Content).OfType<ChatApp.ViewModels.ImageContentViewModel>();
+            if (imageContents.Count() == 1)
+            {
+                Clipboard.SetImage(imageContents.First().Image);
+                return;
+            }
+
+            var filePaths = entries.Select(ent => ent.Content).OfType<ChatApp.ViewModels.DataContentViewModel>().Select(dc => dc.SaveFile(System.IO.Path.GetTempPath()));
+            if (filePaths.Any())
+            {
+                var fc = new System.Collections.Specialized.StringCollection();
+                foreach (var s in filePaths)
+                {
+                    fc.Add(s);
+                }
+                Clipboard.SetFileDropList(fc);
+            }
         }
     }
 }

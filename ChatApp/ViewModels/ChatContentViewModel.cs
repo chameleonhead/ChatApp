@@ -31,18 +31,23 @@ namespace ChatApp.ViewModels
             _content = content;
             FileName = content.FileName;
 
-            SaveFileCommand = new RelayCommand(o => SaveFile());
+            SaveFileCommand = new RelayCommand(o => OpenFile());
         }
-        public void SaveFile()
+        public string SaveFile(string saveDirPath)
         {
-            var tempPath = Path.Combine(Path.GetTempPath(), FileName);
-            using (var fs = new FileStream(tempPath, FileMode.Create, FileAccess.Write))
+            var saveFilePath = Path.Combine(saveDirPath, FileName);
+            using (var fs = new FileStream(saveFilePath, FileMode.Create, FileAccess.Write))
             {
                 using (var writer = new BinaryWriter(fs))
                 {
                     writer.Write(_content.Value);
                 }
             }
+            return saveFilePath;
+        }
+        public void OpenFile()
+        {
+            var tempPath = SaveFile(Path.GetTempPath());
             System.Diagnostics.Process.Start(tempPath);
         }
     }
