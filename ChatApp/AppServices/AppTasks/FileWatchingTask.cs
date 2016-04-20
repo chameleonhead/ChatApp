@@ -51,7 +51,7 @@ namespace ChatApp.AppServices.AppTasks
 
         private void FetchChatEntry(object sender, EventArgs e)
         {
-            var allEntries = _repository.FindAll();
+            var allEntries = _repository.FindAll().ToArray();
 
             foreach (var entry in allEntries.Except(_localEntries))
             {

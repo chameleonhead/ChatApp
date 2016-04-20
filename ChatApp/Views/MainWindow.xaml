@@ -3,41 +3,59 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:ChatApp.Views"
         Title="MainWindow" Height="600" Width="360">
-    <TabControl ItemsSource="{Binding ChatViewModels}" SelectedIndex="0">
-        <TabControl.ItemContainerStyle>
-            <Style TargetType="TabItem">
-                <Setter Property="IsSelected"
+    <Window.CommandBindings>
+        <CommandBinding Command="Open" Executed="OpenCommandExecuted" />
+        <CommandBinding Command="Close" Executed="CloseCommandExecuted" CanExecute="CloseCommandCanExecute" />
+    </Window.CommandBindings>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="ファイル">
+                <MenuItem Header="開く" Command="Open" />
+                <MenuItem Header="閉じる" Command="Close" />
+            </MenuItem>
+            <MenuItem Header="編集">
+                <MenuItem Header="切り取り" Command="Cut"/>
+                <MenuItem Header="コピー" Command="Copy"/>
+                <MenuItem Header="貼り付け" Command="Paste"/>
+                <MenuItem Header="削除" Command="Delete"/>
+            </MenuItem>
+        </Menu>
+        <TabControl ItemsSource="{Binding ChatViewModels}" SelectedIndex="0">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="TabItem">
+                    <Setter Property="IsSelected"
                     Value="{Binding Path=DataContext.IsSelected, RelativeSource={RelativeSource Mode=Self}}"/>
-            </Style>
-        </TabControl.ItemContainerStyle>
-        <TabControl.ItemTemplate>
-            <DataTemplate>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="{Binding Title}" VerticalAlignment="Center" />
-                    <ContentControl Margin="5, 1, 1, 1" VerticalAlignment="Center">
-                        <ContentControl.Style>
-                            <Style TargetType="{x:Type ContentControl}">
-                                <Setter Property="Visibility" Value="Visible"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding UnreadCount}" Value="0">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ContentControl.Style>
-                        <ContentControl.Content>
-                            <Border BorderBrush="DimGray" BorderThickness="2" Background="DimGray" CornerRadius="7" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding UnreadCount}" Foreground="White" Padding="5, 0" FontSize="9" VerticalAlignment="Center" />
-                            </Border>
-                        </ContentControl.Content>
-                    </ContentControl>
-                </StackPanel>
-            </DataTemplate>
-        </TabControl.ItemTemplate>
-        <TabControl.ContentTemplate>
-            <DataTemplate>
-                <local:ChatView DataContext="{Binding Path=.}" />
-            </DataTemplate>
-        </TabControl.ContentTemplate>
-    </TabControl>
+                </Style>
+            </TabControl.ItemContainerStyle>
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Title}" VerticalAlignment="Center" />
+                        <ContentControl Margin="5, 1, 1, 1" VerticalAlignment="Center">
+                            <ContentControl.Style>
+                                <Style TargetType="{x:Type ContentControl}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding UnreadCount}" Value="0">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ContentControl.Style>
+                            <ContentControl.Content>
+                                <Border BorderBrush="DimGray" BorderThickness="2" Background="DimGray" CornerRadius="7" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding UnreadCount}" Foreground="White" Padding="5, 0" FontSize="9" VerticalAlignment="Center" />
+                                </Border>
+                            </ContentControl.Content>
+                        </ContentControl>
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <local:ChatView DataContext="{Binding Path=.}" />
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+    </DockPanel>
 </Window>

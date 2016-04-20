@@ -16,9 +16,9 @@ namespace ChatApp.Views
             InitializeComponent();
         }
 
-        private void CommandBinding_Executed(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        private void ListViewItemsCopied(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
-            var vw = e.OriginalSource as ListView;
+            var vw = sender as ListView;
             if (vw == null) return;
 
             var entries = vw.SelectedItems.OfType<ChatApp.ViewModels.ChatEntryViewModel>();
@@ -45,6 +45,21 @@ namespace ChatApp.Views
                     fc.Add(s);
                 }
                 Clipboard.SetFileDropList(fc);
+            }
+        }
+
+        private void ListViewItemsDeleted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
+        {
+            var vm = DataContext as ChatApp.ViewModels.ChatHistoryViewModel;
+            if (vm == null) return;
+
+            var vw = sender as ListView;
+            if (vw == null) return;
+
+            var entries = vw.SelectedItems.OfType<ChatApp.ViewModels.ChatEntryViewModel>().ToArray();
+            foreach (var ent in entries)
+            {
+                vm.DeleteEntry(ent);
             }
         }
     }

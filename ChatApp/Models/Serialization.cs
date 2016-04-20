@@ -62,14 +62,14 @@ namespace ChatApp.Models
         public void ReadXml(XmlReader reader)
         {
             // IDを取得
-            var id = new ChatEntryId();
+            ChatEntryId id;
             if (reader.HasAttributes)
             {
                 reader.MoveToFirstAttribute();
                 if (reader.LocalName == "Id")
                 {
                     reader.MoveToAttribute("Id");
-                    id.Id = new Guid(reader.Value);
+                    id = new ChatEntryId(reader.Value);
 
                     reader.Read();
                 }
@@ -82,7 +82,7 @@ namespace ChatApp.Models
 
                     reader.ReadStartElement("Id");
                     reader.ReadStartElement("Id");
-                    id.Id = new Guid(reader.ReadContentAsString());
+                    id = new ChatEntryId(reader.ReadContentAsString());
                     reader.ReadEndElement();
                     reader.ReadEndElement();
                 }
@@ -94,7 +94,7 @@ namespace ChatApp.Models
 
                 reader.ReadStartElement("Id");
                 reader.ReadStartElement("Id");
-                id.Id = new Guid(reader.ReadContentAsString());
+                id = new ChatEntryId(reader.ReadContentAsString());
                 reader.ReadEndElement();
                 reader.ReadEndElement();
             }
@@ -159,7 +159,7 @@ namespace ChatApp.Models
         {
             // IDを書き込み
             writer.WriteStartAttribute("Id");
-            writer.WriteString(Id.Id.ToString());
+            writer.WriteString(Id.ToString());
             writer.WriteEndAttribute();
 
             // SendAtを書き込み

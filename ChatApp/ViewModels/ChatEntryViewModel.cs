@@ -24,6 +24,8 @@ namespace ChatApp.ViewModels
                 Content = new DataContentViewModel(entry.Content as DataContent);
         }
 
+        public ChatEntry Entry { get { return _entry; } }
+
         public DateTime SendAt { get; private set; }
         public string SenderName { get; private set; }
         public string SenderEmailAddress { get; private set; }

@@ -22,7 +22,7 @@ namespace ChatApp.DataStores
 
         FileStream WaitForFile(string fullPath, FileMode mode, FileAccess access, FileShare share)
         {
-            for (int numTries = 0; numTries < 10; numTries++)
+            for (int numTries = 0; numTries < 100; numTries++)
             {
                 try
                 {
@@ -35,7 +35,7 @@ namespace ChatApp.DataStores
                 }
                 catch (IOException)
                 {
-                    Thread.Sleep(50);
+                    Thread.Sleep(100);
                 }
             }
 
@@ -49,7 +49,7 @@ namespace ChatApp.DataStores
             {
                 using (var fs = WaitForFile(_documentUri.LocalPath, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
-                    doc = XDocument.Load(_documentUri.LocalPath);
+                    doc = XDocument.Load(fs);
                 }
             }
             else
@@ -66,9 +66,15 @@ namespace ChatApp.DataStores
             var elem = ToXElement(entry);
             var doc = LoadDocument();
             doc.Root.Add(elem);
+            
+            Save(doc);
+        }
 
+        protected void Save(XDocument doc)
+        {
             using (var fs = WaitForFile(_documentUri.LocalPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read))
             {
+                fs.SetLength(0);
                 using (var writer = new StreamWriter(fs))
                 {
                     doc.Save(writer);

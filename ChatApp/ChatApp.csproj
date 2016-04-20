@@ -73,6 +73,7 @@
     <Compile Include="AppServices\AppEvents\ChatMessageReceivedEvent.cs" />
     <Compile Include="AppServices\AppEvents\NewChatEntryFoundEvent.cs" />
     <Compile Include="AppServices\AppTasks\FileWatchingTask.cs" />
+    <Compile Include="AppServices\ChatEntryManagementService.cs" />
     <Compile Include="AppServices\ChatSourceLoadService.cs" />
     <Compile Include="Models\ChatContent.cs" />
     <Compile Include="Models\ChatContentType.cs" />

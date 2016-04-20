@@ -32,7 +32,8 @@
             </DataTemplate>
         </ListView.Resources>
         <ListView.CommandBindings>
-            <CommandBinding Command="Copy" Executed="CommandBinding_Executed" />
+            <CommandBinding Command="Copy" Executed="ListViewItemsCopied" />
+            <CommandBinding Command="Delete" Executed="ListViewItemsDeleted"  />
         </ListView.CommandBindings>
         <ListView.InputBindings>
             <KeyBinding Key="C" Modifiers="Ctrl" Command="Copy" />

@@ -11,6 +11,7 @@ namespace ChatApp.ViewModels
     {
         private ChatReceivingService _ChatReceivingService;
         private ChatSendingService _ChatSendingService;
+        private ChatEntryManagementService _ChatEntryManagementService;
         private ChatEntryRepository _ChatEntryRepository;
 
         public ChatHistoryViewModel ChatHistoryViewModel { get; private set; }
@@ -20,7 +21,7 @@ namespace ChatApp.ViewModels
         {
             get
             {
-                return _source != null ? new System.IO.FileInfo(_source.DocumentUri.LocalPath).Name : string.Empty;
+                return _source != null ? System.IO.Path.GetFileNameWithoutExtension(_source.DocumentUri.LocalPath) : string.Empty;
             }
         }
 
@@ -58,6 +59,10 @@ namespace ChatApp.ViewModels
         }
 
         private ChatSource _source;
+        public ChatSource Source
+        {
+            get { return _source; }
+        }
 
         public ChatViewModel(ChatSource source)
         {
@@ -66,8 +71,9 @@ namespace ChatApp.ViewModels
             _ChatEntryRepository = new ChatEntryRepository(source);
             _ChatReceivingService = new ChatReceivingService(source, _ChatEntryRepository);
             _ChatSendingService = new ChatSendingService(_ChatEntryRepository);
+            _ChatEntryManagementService = new ChatEntryManagementService(_ChatEntryRepository);
 
-            ChatHistoryViewModel = new ChatHistoryViewModel(_ChatReceivingService);
+            ChatHistoryViewModel = new ChatHistoryViewModel(_ChatReceivingService, _ChatEntryManagementService);
             TextSenderViewModel = new ChatSenderViewModel(_ChatSendingService);
             _ChatReceivingService.ChatMessageReceived += ChatMessageReceived;
         }
