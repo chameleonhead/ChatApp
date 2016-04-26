@@ -1,6 +1,7 @@
 ﻿using ChatApp.AppServices;
 using ChatApp.DataStores;
 using ChatApp.Models;
+using ChatApp.Tasks;
 using ChatApp.ViewModels.Helpers;
 
 using System.Windows;
@@ -68,10 +69,11 @@ namespace ChatApp.ViewModels
         {
             _source = source;
 
+            var taskManager = new ChatTaskManager();
             _ChatEntryRepository = new ChatEntryRepository(source);
-            _ChatReceivingService = new ChatReceivingService(source, _ChatEntryRepository);
-            _ChatSendingService = new ChatSendingService(_ChatEntryRepository);
-            _ChatEntryManagementService = new ChatEntryManagementService(_ChatEntryRepository);
+            _ChatReceivingService = new ChatReceivingService(source, _ChatEntryRepository, taskManager);
+            _ChatSendingService = new ChatSendingService(_ChatEntryRepository, taskManager);
+            _ChatEntryManagementService = new ChatEntryManagementService(_ChatEntryRepository, taskManager);
 
             ChatHistoryViewModel = new ChatHistoryViewModel(_ChatReceivingService, _ChatEntryManagementService);
             TextSenderViewModel = new ChatSenderViewModel(_ChatSendingService);

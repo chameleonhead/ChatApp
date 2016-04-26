@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Timers;
 
-namespace ChatApp.AppServices.AppTasks
+namespace ChatApp.Tasks
 {
     class ChatSourceWatchingTask
     {
@@ -17,16 +17,18 @@ namespace ChatApp.AppServices.AppTasks
 
         private HashSet<ChatEntry> _localEntries;
         private ChatEntryRepository _repository;
+        private ChatTaskManager _taskManager;
 
         private SynchronizationContext _context;
         private ChatSource _source;
 
-        public ChatSourceWatchingTask(ChatSource source, ChatEntryRepository repository, int reloadTimeInMillis)
+        public ChatSourceWatchingTask(ChatSource source, ChatEntryRepository repository, ChatTaskManager taskManager)
         {
             _context = SynchronizationContext.Current;
 
             _repository = repository;
             _source = source;
+            _taskManager = taskManager;
 
             _localEntries = new HashSet<ChatEntry>();
             foreach (var entry in _repository.FindAll())
@@ -36,7 +38,7 @@ namespace ChatApp.AppServices.AppTasks
 
             var fsw = new FileSystemWatcher(Path.GetDirectoryName(source.DocumentUri.LocalPath), Path.GetFileName(source.DocumentUri.LocalPath));
             fsw.Changed += new FileSystemEventHandler((o, e) => {
-                FetchChatEntry(this, e);
+                _taskManager.EnqueueTask(() => FetchChatEntry(this, e));
             });
             fsw.EnableRaisingEvents = true;
         }

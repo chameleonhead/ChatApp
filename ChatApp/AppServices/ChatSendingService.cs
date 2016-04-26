@@ -1,5 +1,6 @@
 ﻿using ChatApp.DataStores;
 using ChatApp.Models;
+using ChatApp.Tasks;
 
 using System;
 
@@ -7,26 +8,28 @@ namespace ChatApp.AppServices
 {
     class ChatSendingService
     {
-        private ChatEntryRepository _Repository;
+        private ChatEntryRepository _repository;
+        private ChatTaskManager _taskManager;
 
-        public ChatSendingService(ChatEntryRepository repository)
+        public ChatSendingService(ChatEntryRepository repository, ChatTaskManager taskManager)
         {
-            _Repository = repository;
+            _repository = repository;
+            _taskManager = taskManager;
         }
 
         public void CreateChatEntry(DateTime time, User sender, string content)
         {
-            var id = _Repository.NextIdentity();
+            var id = _repository.NextIdentity();
             var entry = new ChatEntry(id, time, sender, new TextContent(content));
-            _Repository.Save(entry);
+            _repository.Save(entry);
         }
 
         public void CreateChatEntry(DateTime time, User sender, ChatContentType contentType, string fileName, byte[] data)
         {
-            var id = _Repository.NextIdentity();
+            var id = _repository.NextIdentity();
             var dc = new DataContent(contentType, fileName, data);
             var entry = new ChatEntry(id, time, sender, dc);
-            _Repository.Save(entry);
+            _taskManager.EnqueueTask(() => _repository.Save(entry));
         }
     }
 }

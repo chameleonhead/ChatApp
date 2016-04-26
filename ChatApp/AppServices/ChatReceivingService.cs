@@ -1,7 +1,7 @@
 ﻿using ChatApp.AppServices.AppEvents;
-using ChatApp.AppServices.AppTasks;
 using ChatApp.DataStores;
 using ChatApp.Models;
+using ChatApp.Tasks;
 
 using System.Collections.Generic;
 
@@ -21,9 +21,9 @@ namespace ChatApp.AppServices
             } 
         }
 
-        public ChatReceivingService(ChatSource source, ChatEntryRepository repository)
+        public ChatReceivingService(ChatSource source, ChatEntryRepository repository, ChatTaskManager taskManager)
         {
-            _task = new ChatSourceWatchingTask(source, repository, Properties.Settings.Default.ReloadTimeInMillis);
+            _task = new ChatSourceWatchingTask(source, repository, taskManager);
             _task.NewChatEntryFound += NewChatEntryFoundHandler;
         }
 

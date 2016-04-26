@@ -72,7 +72,6 @@
     </ApplicationDefinition>
     <Compile Include="AppServices\AppEvents\ChatMessageReceivedEvent.cs" />
     <Compile Include="AppServices\AppEvents\NewChatEntryFoundEvent.cs" />
-    <Compile Include="AppServices\AppTasks\FileWatchingTask.cs" />
     <Compile Include="AppServices\ChatEntryManagementService.cs" />
     <Compile Include="AppServices\ChatSourceLoadService.cs" />
     <Compile Include="Models\ChatContent.cs" />
@@ -81,6 +80,8 @@
     <Compile Include="AppServices\ChatReceivingService.cs" />
     <Compile Include="DataStores\XDocumentRepository.cs" />
     <Compile Include="Models\Serialization.cs" />
+    <Compile Include="Tasks\ChatTaskManager.cs" />
+    <Compile Include="Tasks\FileWatchingTask.cs" />
     <Compile Include="ViewModels\ChatContentViewModel.cs" />
     <Compile Include="ViewModels\ChatEntryViewModel.cs" />
     <Compile Include="ViewModels\ChatViewModel.cs" />

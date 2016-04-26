@@ -8,9 +8,6 @@
     <Setting Name="EmailAddress" Type="System.String" Scope="User">
       <Value Profile="(Default)">mail@example.com</Value>
     </Setting>
-    <Setting Name="ReloadTimeInMillis" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1000</Value>
-    </Setting>
     <Setting Name="ChatHistoryFilePaths" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Temp\Chat.xml;C:\Temp\Chat2.xml;C:\Temp\Chat3.xml;C:\Temp\Chat3.xml</Value>
     </Setting>
