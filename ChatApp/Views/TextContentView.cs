@@ -18,8 +18,8 @@ namespace ChatApp.Views
                 typeof(TextContentView),
                 new PropertyMetadata(null, new PropertyChangedCallback(OnContentPropertyChanged)));
 
-        private static Regex _uncRegex = new Regex(@"((\\\\[^ \\/:*?""<>|]+\\[^ \\/:*?""<>|]+([ ]+[^ \\/:*?""<>|]+)*)|([a-zA-Z]:))(\\[^ \\/:*?""<>|]+([^ \\/:*?""<>|]+)*)*\\?", RegexOptions.Compiled);
-        private static Regex _uriRegex = new Regex(@"https?://[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([^\\'|`^""<>)(}{\]\[]*)", RegexOptions.Compiled);
+        private static Regex _uncRegex = new Regex(@"((\\\\[^ \\/:*?""<>|]+\\[^ \\/:*?""<>|]+([^ \\/:*?""<>|]+)*)|([a-zA-Z]:))(\\[^ \\/:*?""<>|]+([^ \\/:*?""<>|]+)*)*\\?", RegexOptions.Compiled);
+        private static Regex _uriRegex = new Regex(@"https?://[-a-zA-Z0-9@:%._\+~#=]{2,256}\b([^\\'|`^""<>)(}{\]\[]*)", RegexOptions.Compiled);
 
         public string Content { get; set; }
 
@@ -41,39 +41,45 @@ namespace ChatApp.Views
             var uriMatches = _uriRegex.Matches(newString).Cast<Match>();
             var runs = new List<Inline>();
 
+            var subAmount1 = 0;
             foreach (var uriMatch in uriMatches.OrderBy(m => m.Index))
             {
-                if (uriMatch.Index != 0 && newString.Length > uriMatch.Index)
+                if (uriMatch.Index != 0 && newString.Length > (uriMatch.Index - subAmount1))
                 {
-                    var s = newString.Substring(0, uriMatch.Index - 1);
+                    var s = newString.Substring(0, (uriMatch.Index - subAmount1));
 
                     var uncMatches = _uncRegex.Matches(s).Cast<Match>();
+                    var subAmount2 = 0;
                     foreach (var uncMatch in uncMatches.OrderBy(m => m.Index))
                     {
-                        if (uncMatch.Index != 0 && s.Length > uncMatch.Index)
+                        if (uncMatch.Index != 0 && s.Length > (uncMatch.Index - subAmount2))
                         {
-                            var s2 = s.Substring(0, uncMatch.Index - 1);
+                            var s2 = s.Substring(0, (uncMatch.Index - subAmount2));
                             runs.Add(new Run(s2));
                         }
                         runs.Add(CreateUncHyperLink(uncMatch.Value));
-                        s = s.Substring(uncMatch.Index + uncMatch.Length);
+                        s = s.Substring((uncMatch.Index - subAmount2) + uncMatch.Length);
+                        subAmount2 += uncMatch.Index + uncMatch.Length;
                     }
                     runs.Add(new Run(s));
                 }
                 runs.Add(CreateUriHyperLink(uriMatch.Value));
-                newString = newString.Substring(uriMatch.Index + uriMatch.Length);
+                newString = newString.Substring((uriMatch.Index - subAmount1) + uriMatch.Length);
+                subAmount1 += uriMatch.Index + uriMatch.Length;
             }
             
             var uncMatches2 = _uncRegex.Matches(newString).Cast<Match>();
+            var subAmount3 = 0;
             foreach (var uncMatch in uncMatches2.OrderBy(m => m.Index))
             {
-                if (uncMatch.Index != 0 && newString.Length > uncMatch.Index)
+                if (uncMatch.Index != 0 && newString.Length > (uncMatch.Index - subAmount3))
                 {
-                    var s3 = newString.Substring(0, uncMatch.Index - 1);
+                    var s3 = newString.Substring(0, (uncMatch.Index - subAmount3));
                     runs.Add(new Run(s3));
                 }
                 runs.Add(CreateUncHyperLink(uncMatch.Value));
-                newString = newString.Substring(uncMatch.Index + uncMatch.Length);
+                newString = newString.Substring((uncMatch.Index - subAmount3) + uncMatch.Length);
+                subAmount3 += uncMatch.Index + uncMatch.Length;
             }
 
             if (newString.Length > 0)
@@ -104,20 +110,18 @@ namespace ChatApp.Views
 
         private static Inline CreateUncHyperLink(string uriString)
         {
-            Inline inline;
-            try
+            Uri uri = null;
+            if (Uri.TryCreate(uriString, UriKind.Absolute, out uri))
             {
-                var uri = new Uri(uriString);
                 var link = new Hyperlink(new Run(uriString));
                 link.NavigateUri = new Uri(uriString);
                 link.RequestNavigate += new System.Windows.Navigation.RequestNavigateEventHandler(NavigateToUnc);
-                inline = link;
+                return link;
             }
-            catch
+            else
             {
-                inline = new Run(uriString);
+                return new Run(uriString);
             }
-            return inline;
         }
 
         static void NavigateToUri(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
