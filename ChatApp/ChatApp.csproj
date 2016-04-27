@@ -109,6 +109,7 @@
     <Compile Include="ViewModels\ChatHistoryViewModel.cs" />
     <Compile Include="ViewModels\Commands\RelayCommand.cs" />
     <Compile Include="ViewModels\ChatSenderViewModel.cs" />
+    <Compile Include="Views\TextContentView.cs" />
     <Page Include="Views\ChatHistoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

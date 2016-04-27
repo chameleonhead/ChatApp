@@ -4,12 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:ChatApp.ViewModels"
+             xmlns:local="clr-namespace:ChatApp.Views"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <ListView HorizontalContentAlignment="Stretch" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemsSource="{Binding Entries}">
         <ListView.Resources>
             <DataTemplate DataType="{x:Type vm:TextContentViewModel}">
-                <TextBlock Text="{Binding Path=Content}" TextWrapping="Wrap" />
+                <local:TextContentView Content="{Binding Path=Content}" TextWrapping="Wrap" TextOptions.TextFormattingMode="Ideal" />
             </DataTemplate>
             <DataTemplate DataType="{x:Type vm:ImageContentViewModel}">
                 <StackPanel Orientation="Vertical">
