@@ -21,9 +21,9 @@ namespace ChatApp.AppServices
             } 
         }
 
-        public ChatReceivingService(ChatSource source, ChatEntryRepository repository, ChatTaskManager taskManager)
+        public ChatReceivingService(ChatSource source, ChatEntryRepository repository)
         {
-            _task = new ChatSourceWatchingTask(source, repository, taskManager);
+            _task = new ChatSourceWatchingTask(source, repository);
             _task.NewChatEntryFound += NewChatEntryFoundHandler;
         }
 

@@ -69,11 +69,10 @@ namespace ChatApp.ViewModels
         {
             _source = source;
 
-            var taskManager = new ChatTaskManager();
             _ChatEntryRepository = new ChatEntryRepository(source);
-            _ChatReceivingService = new ChatReceivingService(source, _ChatEntryRepository, taskManager);
-            _ChatSendingService = new ChatSendingService(_ChatEntryRepository, taskManager);
-            _ChatEntryManagementService = new ChatEntryManagementService(_ChatEntryRepository, taskManager);
+            _ChatReceivingService = new ChatReceivingService(source, _ChatEntryRepository);
+            _ChatSendingService = new ChatSendingService(_ChatEntryRepository);
+            _ChatEntryManagementService = new ChatEntryManagementService(_ChatEntryRepository);
 
             ChatHistoryViewModel = new ChatHistoryViewModel(_ChatReceivingService, _ChatEntryManagementService);
             TextSenderViewModel = new ChatSenderViewModel(_ChatSendingService);
