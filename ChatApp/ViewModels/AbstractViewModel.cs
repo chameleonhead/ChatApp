@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ChatApp.ViewModels
 {
-    class AbstractViewModel : INotifyPropertyChanged
+    abstract class AbstractViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
