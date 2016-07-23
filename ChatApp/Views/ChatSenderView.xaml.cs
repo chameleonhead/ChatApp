@@ -109,8 +109,7 @@ namespace ChatApp.Views
                 e.Handled = true;
             }
 
-            var text = Clipboard.GetText();
-            tb.AppendText(text);
+            tb.Paste();
         }
     }
 }

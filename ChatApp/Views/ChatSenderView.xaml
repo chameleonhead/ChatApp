@@ -9,7 +9,7 @@
         <Button DockPanel.Dock="Right" Padding="20, 10" Content="送信" Command="{Binding SendCommand}" />
         <TextBox DockPanel.Dock="Left" Name="tb" Text="{Binding Content, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" AllowDrop="True" PreviewDrop="TextBox_Drop" PreviewDragOver="TextBox_DragOver" AcceptsReturn="True" VerticalScrollBarVisibility="Auto">
             <TextBox.InputBindings>
-                <KeyBinding Key="Return" Command="{Binding SendCommand}" />
+                <KeyBinding Key="Return" Modifiers="Ctrl" Command="{Binding SendCommand}" />
             </TextBox.InputBindings>
             <TextBox.CommandBindings>
                 <CommandBinding Command="Paste" Executed="CommandBinding_Executed" />
